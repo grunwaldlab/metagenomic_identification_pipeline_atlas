@@ -1,0 +1,128 @@
+[
+  {
+    "objectID": "tools.html",
+    "href": "tools.html",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "",
+    "text": "RAM, database, results, and speed values are approximate planning ranges for a typical short-read sample (about 10 million paired 2x150 bp reads) where no directly comparable benchmark exists. Range columns display the source summary and sort by the largest numeric bound parsed in GB; the same bound drives cell shading. Qualitative descriptions use planning maxima (for example, “several GB” maps to 20 GB and “hundreds of GB” to 300 GB); N/R bounds sort as unavailable and remain uncolored. Speed uses an internal rank (Low &lt; Low-Medium &lt; Medium &lt; High; N/A last in ascending order), not alphabetical order. Reference builds, settings, and retained intermediates can change these values substantially. Workflow engines and report generators are included but do not perform organism identification.\nPipeline count is the number of distinct included workflows mapped to the tool; the table defaults to highest count first.\nDownload tool metadata · Download pipeline/tool mappings · Return to the pipeline catalogue"
+  },
+  {
+    "objectID": "strategies.html",
+    "href": "strategies.html",
+    "title": "Strategies",
+    "section": "",
+    "text": "01\n\n\nAssigns reads directly by k-mer, translated alignment, or marker/rRNA mapping and summarizes abundance. Fast classifiers and marker profiles are useful for community comparisons; taxon coverage and false positives depend strongly on database content and version. KAPTAIN is long-read and genome-reference based; MOCAT2 and MGnify use more curated marker/reference catalogs.\n\n\nnf-core/taxprofiler bioBakery workflows wmgx HOME-BIO MOCAT2 MetaShot MGnify pipeline v5 KAPTAIN\n\n\n\n02\n\n\nSearches broadly for candidate organisms in host-associated or surveillance specimens. CZ ID, RIEMS, and SURPI use broad nucleotide/protein references; TaxTriage adds alignment breadth, ambiguity checks, and evidence scoring; EDGE integrates configurable analyses and reports. Broad searches can be storage-intensive, and low-abundance calls require independent review.\n\n\nTaxTriage CZ ID local short-read MNGS workflow EDGE Bioinformatics RIEMS SURPI\n\n\n\n03\n\n\nAssembles reads, predicts genes, then assigns taxonomy to contigs or recovered MAGs by homology or genome placement. These workflows provide genomic context but miss taxa that fail to assemble/bin; assembly, mapping, and binning intermediates can dominate disk and RAM. Their outputs are not equivalent to read-level abundance profiles.\n\n\nSqueezeMeta nf-core/mag ATLAS MetaWRAP IMP Metagenomics-Toolkit\n\n\n\n04\n\n\nScreens broadly within the viral domain, then assembles, validates, dereplicates, or annotates viral sequences. These workflows characterize viral genomes/community content but do not substitute for bacterial, archaeal, fungal, or general community profiling.\n\n\nViroProfiler VirMake nf-core/viralmetagenome metavirs"
+  },
+  {
+    "objectID": "strategies.html#strategy-groupings",
+    "href": "strategies.html#strategy-groupings",
+    "title": "Strategies",
+    "section": "",
+    "text": "01\n\n\nAssigns reads directly by k-mer, translated alignment, or marker/rRNA mapping and summarizes abundance. Fast classifiers and marker profiles are useful for community comparisons; taxon coverage and false positives depend strongly on database content and version. KAPTAIN is long-read and genome-reference based; MOCAT2 and MGnify use more curated marker/reference catalogs.\n\n\nnf-core/taxprofiler bioBakery workflows wmgx HOME-BIO MOCAT2 MetaShot MGnify pipeline v5 KAPTAIN\n\n\n\n02\n\n\nSearches broadly for candidate organisms in host-associated or surveillance specimens. CZ ID, RIEMS, and SURPI use broad nucleotide/protein references; TaxTriage adds alignment breadth, ambiguity checks, and evidence scoring; EDGE integrates configurable analyses and reports. Broad searches can be storage-intensive, and low-abundance calls require independent review.\n\n\nTaxTriage CZ ID local short-read MNGS workflow EDGE Bioinformatics RIEMS SURPI\n\n\n\n03\n\n\nAssembles reads, predicts genes, then assigns taxonomy to contigs or recovered MAGs by homology or genome placement. These workflows provide genomic context but miss taxa that fail to assemble/bin; assembly, mapping, and binning intermediates can dominate disk and RAM. Their outputs are not equivalent to read-level abundance profiles.\n\n\nSqueezeMeta nf-core/mag ATLAS MetaWRAP IMP Metagenomics-Toolkit\n\n\n\n04\n\n\nScreens broadly within the viral domain, then assembles, validates, dereplicates, or annotates viral sequences. These workflows characterize viral genomes/community content but do not substitute for bacterial, archaeal, fungal, or general community profiling.\n\n\nViroProfiler VirMake nf-core/viralmetagenome metavirs"
+  },
+  {
+    "objectID": "strategies.html#pipeline-similarity-pca",
+    "href": "strategies.html#pipeline-similarity-pca",
+    "title": "Strategies",
+    "section": "Pipeline similarity (PCA)",
+    "text": "Pipeline similarity (PCA)\n\nEach point is one pipeline and its name is printed beside the point. Principal components are calculated from four balanced feature blocks: tool presence/absence, supported taxonomic groups, intended taxonomic groups, and coarse workflow stages/methods. Tool features are not allowed to overwhelm the smaller taxa and methods blocks simply because there are more tools. Colors show the assigned strategy group; hover text contains only the pipeline name.\n\n\n\n\n\n\n\nThe PCA is exploratory: a pipeline’s position summarizes the encoded feature table, not benchmark performance or biological similarity. Its coordinates can change as tools, taxonomy evidence, and method annotations are updated."
+  },
+  {
+    "objectID": "strategies.html#tool-co-occurrence-network",
+    "href": "strategies.html#tool-co-occurrence-network",
+    "title": "Strategies",
+    "section": "Tool co-occurrence network",
+    "text": "Tool co-occurrence network\nEach node is a distinct tool; node size reflects the number of included pipelines using it, and node color marks its broad purpose. Edge width is proportional to the number of pipelines containing that tool pair. The default threshold is two pipelines; lower it to one to show all pairs, or raise it to prune weaker associations. Tools with no visible edges at the selected threshold are hidden. Associations are pipeline-level co-inclusion, so optional alternatives listed by a workflow need not run together in one configuration.\n\n\nMinimum pipelines per tool pair\n\n2\n\n504 links shown\n\n\n\n\n\n\n\n\n\nThe editable tool-to-pipeline links are in data/pipeline_tools.csv; tool names and purposes come from data/tools.csv. Re-render with quarto render after changing either file."
+  },
+  {
+    "objectID": "pipelines.html",
+    "href": "pipelines.html",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "",
+    "text": "Each citation links to its primary reference; repository links open the source code. Scope and screening boundaries are summarized on the Overview page."
+  },
+  {
+    "objectID": "pipelines.html#download-the-editable-data",
+    "href": "pipelines.html#download-the-editable-data",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "Download the editable data",
+    "text": "Download the editable data\n\nPipeline catalogue CSV\nCore tools CSV\nTaxon coverage matrix CSV\nResource evidence CSV\nStrategy groups CSV\nPipeline-to-group mapping CSV\nData dictionary"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "",
+    "text": "A pipeline is included when it:\n\nAccepts untargeted shotgun DNA or RNA reads.\nDoes not require the user to specify a target organism in advance.\nCovers a broad community or major taxonomic group rather than a narrow lineage.\nHas publicly available source code under an open-source license.\nDoes not require an account or API key for an external web resource essential to organism identification.\n\nVirus-only pipelines qualify if they screen broadly across viruses. Hosted services and locally runnable code are assessed separately."
+  },
+  {
+    "objectID": "index.html#inclusion-criteria",
+    "href": "index.html#inclusion-criteria",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "",
+    "text": "A pipeline is included when it:\n\nAccepts untargeted shotgun DNA or RNA reads.\nDoes not require the user to specify a target organism in advance.\nCovers a broad community or major taxonomic group rather than a narrow lineage.\nHas publicly available source code under an open-source license.\nDoes not require an account or API key for an external web resource essential to organism identification.\n\nVirus-only pipelines qualify if they screen broadly across viruses. Hosted services and locally runnable code are assessed separately."
+  },
+  {
+    "objectID": "index.html#summary-statistics",
+    "href": "index.html#summary-statistics",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "Summary statistics",
+    "text": "Summary statistics\n\n\n22 qualifying pipelines80 distinct tools"
+  },
+  {
+    "objectID": "index.html#last-modified",
+    "href": "index.html#last-modified",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "Last modified",
+    "text": "Last modified\nEvidence and pipeline status were last reviewed 15 October 2026. The website is rebuilt from the editable sources whenever quarto render is run."
+  },
+  {
+    "objectID": "index.html#how-to-modify-the-raw-data",
+    "href": "index.html#how-to-modify-the-raw-data",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "How to modify the raw data",
+    "text": "How to modify the raw data\nEdit the CSV files in data/ using a spreadsheet or text editor. data/README.md defines each file and the key fields. Keep IDs stable and update relationship tables when adding pipelines, tools, or strategy assignments. Then run quarto render to rebuild the site."
+  },
+  {
+    "objectID": "index.html#how-the-website-is-constructed",
+    "href": "index.html#how-the-website-is-constructed",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "How the website is constructed",
+    "text": "How the website is constructed\nThis is a static Quarto website built from .qmd pages, CSV files, R calculations, and styles.css. DT renders searchable tables; Plotly renders the PCA; networkD3 renders the interactive tool network. The site does not require a hosted dashboard service."
+  },
+  {
+    "objectID": "index.html#how-the-raw-data-is-constructed",
+    "href": "index.html#how-the-raw-data-is-constructed",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "How the raw data is constructed",
+    "text": "How the raw data is constructed\nPipeline records were assembled through literature-index and public-repository searches, citation chasing, and review of primary papers, official documentation, licenses, and source repositories. The structured CSVs separate pipeline metadata, individual tools, pipeline/tool relationships, taxon coverage, resource evidence, planning estimates, and strategy-group membership. References link to primary sources where available. Resource estimates and relative speeds are explicitly identified as approximations; unavailable measurements remain N/R rather than being inferred as facts.\nThe search was broad but not a guarantee that every unpublished or locally developed workflow was found. pipeline_review.md remains in the source folder as the detailed research note; the dashboard data and cited pipeline pages are the maintained website views."
+  },
+  {
+    "objectID": "index.html#near-misses-and-exclusions",
+    "href": "index.html#near-misses-and-exclusions",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "Near misses and exclusions",
+    "text": "Near misses and exclusions\nThese candidates were reviewed but are not part of the 22-pipeline included set under the criteria above.\n\n\n\nCandidate\nDecision\nReason\n\n\n\n\nEQUATOR\nExcluded from strict inventory\nDescribes a useful Trimmomatic, Kraken2/Bracken, and Kaiju recipe, but no independently licensed public end-to-end pipeline repository was verified.\n\n\nKodoja\nBorderline; not counted\nMIT-licensed and untargeted for plant viruses, but its documented input is plant RNA-seq/sRNA-seq rather than clearly defined shotgun metagenomic libraries.\n\n\nTaxonomer\nExcluded from pipeline count\nLegacy classifier/database toolkit rather than a maintained end-to-end workflow; its old web portal is not a current public service.\n\n\nVIRify\nAssembly-input near-miss\nBroad viral contig identification, but requires assembled metagenomic/metatranscriptomic sequences rather than raw shotgun reads.\n\n\nSunbeam\nExcluded pending license evidence\nSupports untargeted shotgun reads and Kraken extensions, but the current repository has no verifiable recognized open-source license file/metadata.\n\n\nSURPI+\nExcluded\nIts license restricts use to research and prohibits patient-care use. Original SURPI is included separately.\n\n\nPathSeqPipelineSpark\nExcluded\nExpects BAM/SAM/CRAM rather than raw reads; distinct project-level open-source licensing was not established.\n\n\nHosted CZ ID/IDseq portal\nNot counted as a public no-account service\nHosted submission/reporting requires an account. The locally runnable workflow is evaluated separately.\n\n\nOne Codex and commercial platforms\nExcluded\nNot open source under the review criteria.\n\n\nMetaPhlAn, Kraken2, Bracken, Kaiju, Centrifuge, DIAMOND, mOTUs, CAT/GTDB-Tk\nTools, not pipelines\nThese are profilers/classifiers or genome-taxonomy tools embedded in included workflows; they are listed on the Tools page."
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "",
+    "text": "Long range and context text is clipped to keep rows a consistent height; the complete values remain in the editable CSV files.\nThe score is a relative resource-efficiency index: RAM and database-disk maxima are ranked within this pipeline set with lower use scoring higher, and speed rank favors faster workflows. The three components are averaged on a 0–1 scale; unavailable RAM or database bounds receive a neutral midpoint. It is a planning aid, not a performance benchmark. Range columns retain their text summaries, sort by their largest numeric bound in GB, and use that bound for background shading. Approximate ranges are provided in resource_estimates.csv where literature measurements are absent; unavailable values remain uncolored. Speed sorts by meaning (Low &lt; Low-Medium &lt; Medium &lt; High), not alphabetically.\nWall-clock time is not converted to CPU-hours unless core utilization is reported. Not reported means the reviewed sources did not support a defensible value."
+  },
+  {
+    "objectID": "resources.html#by-target-taxon",
+    "href": "resources.html#by-target-taxon",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "By target taxon",
+    "text": "By target taxon\nThe literature did not establish comparable per-sample RAM, CPU-hours, database bytes, and output bytes separately for viruses, bacteria, archaea, fungi, plants, animals, and protists. Available measurements are usually platform minima or untargeted bacterial/mock-community examples. Database contents, sample read count, host fraction, sequencing technology, and retained assembly intermediates can outweigh the organism group as resource drivers.\n\n\n\n\n\n\n\n\nTarget group\nEvidence available\nMain gap\n\n\n\n\nViruses\nVirMake recommends at least 64 GB RAM and 200 GB free disk; this is a platform recommendation. CZ ID’s reduced viral test setup documents 16 GB RAM and more than 10 GB disk.\nNo comparable per-virus sample CPU-hours, peak RAM, or results storage.\n\n\nBacteria\nIDseq reports 3 hours mean elapsed time (1.6–10 hours) on benchmark data, without core count. SqueezeMeta reports a 42-million-paired-read example on a 16 GB VM.\nNot a matched benchmark; CPU-hours and output bytes are unavailable.\n\n\nArchaea\nCovered by microbial profilers and broad-reference workflows.\nNo archaeal-only resource profile.\n\n\nFungi\nSupported by selected classifiers and domain-specific references in some workflows.\nNo fungi-only resource profile or common database footprint.\n\n\nPlants\nBroad databases may return plant sequence hits; plant viruses are the focus of neighboring workflows such as Kodoja.\nNo included plant-target community resource benchmark.\n\n\nAnimals\nAnimal/host genomes are often used for host subtraction, not as target-community profiles.\nNo animal-target community resource benchmark.\n\n\nProtists\nSome broad or domain-specific databases can support protozoa/microbial-eukaryote calls.\nNo protist-only resource profile.\n\n\n\nThe historical Kraken 2 standard database example is about 100 GB to build, including a 29 GB compact hash table; it dates to 2018 and is a tool-level illustration, not a current per-sample estimate (manual). SURPI’s historical comprehensive indexes total roughly 783 GB, but that is based on 2013 NCBI data and should not be used as a modern planning figure.\nDownload documented resource evidence · Download planning estimates · Review resource caveats"
+  },
+  {
+    "objectID": "taxa.html",
+    "href": "taxa.html",
+    "title": "Shotgun Pipeline Atlas",
+    "section": "",
+    "text": "The colored score bar is a relative breadth metric, not a quality/performance score; the numeric value is retained for sorting but hidden. Scores range from 0 to 1. For each of seven groups, intended support earns 2 points (Y), 1.25 (~), or 1 (DB); supported but non-intended Y, ~, and DB earn 1, 0.5, and 0.25 points respectively. The total is normalized by the maximum of 14. Y means supported, DB means database-dependent, ~ means partial/optional, and — means no documented support.\nScope and notes text is clipped to keep all rows the same height; full text is available in the editable CSV and detailed review.\nThis matrix intentionally avoids interpreting an arbitrary match in a broad nt/nr reference as validated organism identification. Genome-resolved workflows report taxonomy for recovered contigs or MAGs, while read-profiling workflows report read-level assignments; those outputs should not be treated as interchangeable.\nDownload the editable taxon matrix · Review the inclusion boundaries"
+  }
+]

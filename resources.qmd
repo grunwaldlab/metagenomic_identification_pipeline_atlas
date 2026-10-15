@@ -1,0 +1,108 @@
+---
+page-layout: full
+toc: false
+---
+
+```{r}
+resources <- read.csv("data/resources.csv", stringsAsFactors = FALSE, check.names = FALSE)
+estimates <- read.csv("data/resource_estimates.csv", stringsAsFactors = FALSE, check.names = FALSE)
+pipelines <- read.csv("data/pipelines.csv", stringsAsFactors = FALSE, check.names = FALSE)
+source("R/tool_ranges.R")
+source("R/resource_score.R")
+resources <- merge(
+  merge(resources, estimates, by = "pipeline_id", all.x = TRUE, sort = FALSE),
+  pipelines[, c("pipeline_id", "name")],
+  by = "pipeline_id",
+  all.x = TRUE,
+  sort = FALSE
+)
+resources$ram_max_gb <- vapply(resources$estimated_ram_range, max_range_gb, numeric(1))
+resources$database_max_gb <- vapply(resources$estimated_database_storage, max_range_gb, numeric(1))
+resources$results_max_gb <- vapply(resources$estimated_sample_storage, max_range_gb, numeric(1))
+resources$evidence_context <- paste(
+  resources$resource_evidence_type, resources$context, resources$estimate_basis, sep = "; "
+)
+resources <- resource_score(resources)
+catalog <- resources[, c(
+  "name", "score", "estimated_ram_range", "relative_speed", "estimated_database_storage",
+  "estimated_sample_storage", "cpu_hours_or_elapsed", "evidence_context", "ram_max_gb",
+  "speed_rank", "database_max_gb", "results_max_gb"
+)]
+names(catalog) <- c(
+  "Pipeline", "Score", "RAM range", "Relative speed", "Database disk",
+  "Sample/result disk", "CPU-hours / elapsed", "Evidence and context", "ram_max_gb",
+  "speed_rank", "database_max_gb", "results_max_gb"
+)
+```
+
+
+```{r}
+DT::datatable(
+  catalog,
+  elementId = "resource-catalogue",
+  rownames = FALSE,
+  filter = "top",
+  escape = 1:8,
+  class = "compact stripe resource-table",
+  options = list(
+    pageLength = 100,
+    lengthMenu = c(10, 25, 50, 100),
+    scrollX = FALSE,
+    autoWidth = FALSE,
+    order = list(list(1, "desc")),
+    dom = '<"resource-table-search"f>rt<"resource-table-footer"lip>',
+    columnDefs = list(
+      list(width = "10%", targets = 0),
+      list(width = "5%", targets = 1),
+      list(width = "15%", targets = 2),
+      list(width = "7%", targets = 3),
+      list(width = "14%", targets = 4),
+      list(width = "14%", targets = 5),
+      list(width = "10%", targets = 6),
+      list(width = "25%", targets = 7),
+      list(orderData = 8, targets = 2),
+      list(orderData = 9, targets = 3),
+      list(orderData = 10, targets = 4),
+      list(orderData = 11, targets = 5),
+      list(visible = FALSE, targets = 8:11)
+    )
+  )
+) |>
+  DT::formatStyle(
+    "Score",
+    color = "transparent",
+    background = DT::styleColorBar(c(0, 1), "#8bb7a8", angle = 270),
+    backgroundSize = "100% 12px",
+    backgroundRepeat = "no-repeat",
+    backgroundPosition = "left center"
+  ) |>
+  DT::formatStyle(
+    "RAM range",
+    valueColumns = "ram_max_gb",
+    backgroundColor = DT::styleInterval(c(4, 16, 64), c("#d5eee7", "#e7edf4", "#f6e8c8", "#e7b7ad"))
+  ) |>
+  DT::formatStyle(
+    "Relative speed",
+    backgroundColor = DT::styleEqual(
+      c("High", "Medium", "Low-Medium", "Low", "N/A"),
+      c("#d5eee7", "#e7edf4", "#f6e8c8", "#e7b7ad", "#f1f1ef")
+    )
+  ) |>
+  DT::formatStyle(
+    "Database disk",
+    valueColumns = "database_max_gb",
+    backgroundColor = DT::styleInterval(c(0, 1, 10, 100), c("#f1f1ef", "#d5eee7", "#e7edf4", "#f6e8c8", "#e7b7ad"))
+  ) |>
+  DT::formatStyle(
+    "Sample/result disk",
+    valueColumns = "results_max_gb",
+    backgroundColor = DT::styleInterval(c(0, 1, 10, 100), c("#f1f1ef", "#d5eee7", "#e7edf4", "#f6e8c8", "#e7b7ad"))
+  )
+```
+
+Long range and context text is clipped to keep rows a consistent height; the complete values remain in the editable CSV files.
+
+The score is a relative resource-efficiency index: RAM and database-disk maxima are ranked within this pipeline set with lower use scoring higher, and speed rank favors faster workflows. The three components are averaged on a 0–1 scale; unavailable RAM or database bounds receive a neutral midpoint. It is a planning aid, not a performance benchmark. Range columns retain their text summaries, sort by their largest numeric bound in GB, and use that bound for background shading. Approximate ranges are provided in `resource_estimates.csv` where literature measurements are absent; unavailable values remain uncolored. Speed sorts by meaning (Low < Low-Medium < Medium < High), not alphabetically.
+
+Wall-clock time is not converted to CPU-hours unless core utilization is reported. `Not reported` means the reviewed sources did not support a defensible value.
+

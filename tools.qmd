@@ -1,0 +1,111 @@
+---
+page-layout: full
+toc: false
+---
+
+```{r}
+tools <- read.csv("data/tools.csv", stringsAsFactors = FALSE, check.names = FALSE)
+pipeline_tools <- read.csv("data/pipeline_tools.csv", stringsAsFactors = FALSE, check.names = FALSE)
+pipelines <- read.csv("data/pipelines.csv", stringsAsFactors = FALSE, check.names = FALSE)
+source("R/tool_ranges.R")
+pipeline_names <- setNames(pipelines$name, pipelines$pipeline_id)
+pipeline_lists <- split(pipeline_tools$pipeline_id, pipeline_tools$tool_id)
+tools$pipelines <- vapply(tools$tool_id, function(id) {
+  ids <- unique(pipeline_lists[[id]])
+  paste(unname(pipeline_names[ids]), collapse = "; ")
+}, character(1))
+tools$pipeline_count <- vapply(tools$tool_id, function(id) {
+  length(unique(pipeline_lists[[id]]))
+}, integer(1))
+
+linkify <- function(url, label) {
+  if (!nzchar(url) || url == "N/R") return("N/R")
+  paste0(
+    '<a href="', htmltools::htmlEscape(url, attribute = TRUE),
+    '" target="_blank" rel="noopener noreferrer">',
+    htmltools::htmlEscape(label), '</a>'
+  )
+}
+tools$source_link <- mapply(linkify, tools$source_url, tools$source_kind, USE.NAMES = FALSE)
+tools$citation_link <- mapply(linkify, tools$citation_url, "Reference", USE.NAMES = FALSE)
+tools$ram_max_gb <- vapply(tools$ram_range, max_range_gb, numeric(1))
+tools$speed_rank <- speed_rank(tools$relative_speed)
+tools$database_max_gb <- vapply(tools$database_disk_range, max_range_gb, numeric(1))
+tools$results_max_gb <- vapply(tools$results_disk_range, max_range_gb, numeric(1))
+catalog <- tools[, c(
+  "tool_name", "pipeline_count", "purpose", "pipelines", "source_link", "citation_link",
+  "ram_range", "relative_speed", "database_disk_range", "results_disk_range", "estimate_basis",
+  "ram_max_gb", "speed_rank", "database_max_gb", "results_max_gb"
+)]
+names(catalog) <- c(
+  "Tool", "Pipeline count", "Purpose", "Pipelines that use it", "Source code / docs", "Citation",
+  "RAM range", "Relative speed", "Database disk", "Sample/result disk", "Estimate notes",
+  "ram_max_gb", "speed_rank", "database_max_gb", "results_max_gb"
+)
+```
+
+
+```{r}
+DT::datatable(
+  catalog,
+  elementId = "tool-catalogue",
+  rownames = FALSE,
+  filter = "top",
+  escape = c(1:4, 7:15),
+  class = "compact stripe tool-table",
+  options = list(
+    pageLength = 100,
+    lengthMenu = c(10, 25, 50, 100),
+    scrollX = FALSE,
+    autoWidth = FALSE,
+    order = list(list(1, "desc")),
+    dom = '<"tool-table-search"f>rt<"tool-table-footer"lip>',
+    columnDefs = list(
+      list(width = "8%", targets = 0),
+      list(width = "4%", targets = 1),
+      list(width = "14%", targets = 2),
+      list(width = "17%", targets = 3),
+      list(width = "7%", targets = 4),
+      list(width = "6%", targets = 5),
+      list(width = "9%", targets = 6),
+      list(width = "6%", targets = 7),
+      list(width = "9%", targets = 8),
+      list(width = "9%", targets = 9),
+      list(width = "11%", targets = 10),
+      list(orderData = 11, targets = 6),
+      list(orderData = 12, targets = 7),
+      list(orderData = 13, targets = 8),
+      list(orderData = 14, targets = 9),
+      list(visible = FALSE, targets = 11:14)
+    )
+  )
+ ) |>
+  DT::formatStyle(
+    "RAM range",
+    valueColumns = "ram_max_gb",
+    backgroundColor = DT::styleInterval(c(4, 16, 64), c("#d5eee7", "#e7edf4", "#f6e8c8", "#e7b7ad"))
+  ) |>
+  DT::formatStyle(
+    "Relative speed",
+    backgroundColor = DT::styleEqual(
+      c("High", "Medium", "Low-Medium", "Low", "N/A"),
+      c("#d5eee7", "#e7edf4", "#f6e8c8", "#e7b7ad", "#f1f1ef")
+    )
+  ) |>
+  DT::formatStyle(
+    "Database disk",
+    valueColumns = "database_max_gb",
+    backgroundColor = DT::styleInterval(c(0, 1, 10, 100), c("#f1f1ef", "#d5eee7", "#e7edf4", "#f6e8c8", "#e7b7ad"))
+  ) |>
+  DT::formatStyle(
+    "Sample/result disk",
+    valueColumns = "results_max_gb",
+    backgroundColor = DT::styleInterval(c(0, 1, 10, 100), c("#f1f1ef", "#d5eee7", "#e7edf4", "#f6e8c8", "#e7b7ad"))
+  )
+```
+
+RAM, database, results, and speed values are approximate planning ranges for a typical short-read sample (about 10 million paired 2x150 bp reads) where no directly comparable benchmark exists. Range columns display the source summary and sort by the largest numeric bound parsed in GB; the same bound drives cell shading. Qualitative descriptions use planning maxima (for example, “several GB” maps to 20 GB and “hundreds of GB” to 300 GB); `N/R` bounds sort as unavailable and remain uncolored. Speed uses an internal rank (Low < Low-Medium < Medium < High; N/A last in ascending order), not alphabetical order. Reference builds, settings, and retained intermediates can change these values substantially. Workflow engines and report generators are included but do not perform organism identification.
+
+Pipeline count is the number of distinct included workflows mapped to the tool; the table defaults to highest count first.
+
+[Download tool metadata](data/tools.csv) · [Download pipeline/tool mappings](data/pipeline_tools.csv) · [Return to the pipeline catalogue](pipelines.qmd)

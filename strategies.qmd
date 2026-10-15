@@ -1,0 +1,128 @@
+---
+title: "Strategies"
+page-layout: full
+toc: false
+---
+
+```{r}
+groups <- read.csv("data/strategy_groups.csv", stringsAsFactors = FALSE, check.names = FALSE)
+members <- read.csv("data/pipeline_groups.csv", stringsAsFactors = FALSE, check.names = FALSE)
+pipelines <- read.csv("data/pipelines.csv", stringsAsFactors = FALSE, check.names = FALSE)
+pipeline_tools <- read.csv("data/pipeline_tools.csv", stringsAsFactors = FALSE, check.names = FALSE)
+tools <- read.csv("data/tools.csv", stringsAsFactors = FALSE, check.names = FALSE)
+taxa <- read.csv("data/taxa_matrix.csv", stringsAsFactors = FALSE, check.names = FALSE)
+```
+
+## Strategy groupings
+
+```{r, results="asis"}
+escape_html <- function(x) {
+  x <- gsub("&", "&amp;", x, fixed = TRUE)
+  x <- gsub("<", "&lt;", x, fixed = TRUE)
+  x <- gsub(">", "&gt;", x, fixed = TRUE)
+  x <- gsub("\"", "&quot;", x, fixed = TRUE)
+  x
+}
+
+for (i in seq_len(nrow(groups))) {
+  group_id <- groups$group_id[i]
+  ids <- members$pipeline_id[members$group_id == group_id]
+  pipeline_names <- pipelines$name[match(ids, pipelines$pipeline_id)]
+  cat(sprintf(
+    '<article class="strategy-card"><span class="strategy-index">0%d</span><h2>%s</h2><p>%s</p><div class="strategy-members">%s</div></article>',
+    i,
+    escape_html(groups$group_name[i]),
+    escape_html(groups$summary[i]),
+    paste(sprintf('<span class="pipeline-chip">%s</span>', escape_html(pipeline_names)), collapse = " ")
+  ))
+}
+```
+
+## Pipeline similarity (PCA)
+
+::: {.prose-visual}
+Each point is one pipeline and its name is printed beside the point. Principal components are calculated from four balanced feature blocks: tool presence/absence, supported taxonomic groups, intended taxonomic groups, and coarse workflow stages/methods. Tool features are not allowed to overwhelm the smaller taxa and methods blocks simply because there are more tools. Colors show the assigned strategy group; hover text contains only the pipeline name.
+
+```{r, fig.height=8}
+source("R/strategy_analysis.R")
+membership <- read.csv("data/pipeline_groups.csv", stringsAsFactors = FALSE, check.names = FALSE)
+pca <- strategy_pca_data(pipelines, taxa, pipeline_tools, membership, groups)
+palette <- c(
+  "Read-level classification and profiling" = "#176b68",
+  "Clinical and hypothesis-free mNGS" = "#bf6147",
+  "Assembly and genome-resolved identification" = "#6577a5",
+  "Untargeted viral metagenome workflows" = "#b18432"
+)
+plot <- plotly::plot_ly(
+  data = pca$scores,
+  x = ~PC1,
+  y = ~PC2,
+  type = "scatter",
+  mode = "markers+text",
+  color = ~strategy,
+  colors = palette,
+  text = ~pipeline,
+  hovertext = ~pipeline,
+  textposition = "top center",
+  textfont = list(size = 9, color = "#17262d"),
+  hoverinfo = "text",
+  marker = list(size = 13, opacity = 0.85, line = list(color = "white", width = 1))
+)
+plot <- plotly::layout(
+  plot,
+  xaxis = list(title = sprintf("PC1 (%.1f%%)", pca$variance[1]), zeroline = FALSE),
+  yaxis = list(title = sprintf("PC2 (%.1f%%)", pca$variance[2]), zeroline = FALSE),
+  legend = list(title = list(text = "Strategy group")),
+  margin = list(b = 70),
+  height = 800
+)
+plotly::config(plot, displaylogo = FALSE, responsive = TRUE)
+```
+:::
+
+The PCA is exploratory: a pipeline's position summarizes the encoded feature table, not benchmark performance or biological similarity. Its coordinates can change as tools, taxonomy evidence, and method annotations are updated.
+
+## Tool co-occurrence network
+
+Each node is a distinct tool; node size reflects the number of included pipelines using it, and node color marks its broad purpose. Edge width is proportional to the number of pipelines containing that tool pair. The default threshold is two pipelines; lower it to one to show all pairs, or raise it to prune weaker associations. Tools with no visible edges at the selected threshold are hidden. Associations are pipeline-level co-inclusion, so optional alternatives listed by a workflow need not run together in one configuration.
+
+```{r}
+network <- tool_network_data(tools, pipeline_tools)
+max_cooccurrence <- max(network$links$weight)
+```
+
+```{r, results="asis"}
+cat(sprintf(
+  '<div class="network-threshold-control"><label for="cooccurrence-threshold">Minimum pipelines per tool pair</label><input id="cooccurrence-threshold" type="range" min="1" max="%d" value="2" step="1"><output id="cooccurrence-threshold-value">2</output><span id="cooccurrence-link-count">%d links shown</span></div>',
+  max_cooccurrence, nrow(network$links)
+))
+```
+
+```{r}
+networkD3::forceNetwork(
+  Links = network$links,
+  Nodes = network$nodes,
+  Source = "source",
+  Target = "target",
+  Value = "weight",
+  NodeID = "name",
+  Nodesize = "pipeline_count",
+  Group = "category",
+  opacity = 0.95,
+  opacityNoHover = 0.9,
+  zoom = TRUE,
+  legend = TRUE,
+  bounded = TRUE,
+  fontSize = 14,
+  fontFamily = "sans-serif",
+  charge = -180,
+  linkDistance = htmlwidgets::JS("function(d) { return 140 / Math.sqrt(d.value); }"),
+  linkWidth = htmlwidgets::JS("function(d) { return 1.25 * d.value; }"),
+  linkColour = "#98a3a3",
+  height = 720
+)
+```
+
+<script src="assets/network-threshold.js" defer></script>
+
+The editable tool-to-pipeline links are in [`data/pipeline_tools.csv`](data/pipeline_tools.csv); tool names and purposes come from [`data/tools.csv`](data/tools.csv). Re-render with `quarto render` after changing either file.

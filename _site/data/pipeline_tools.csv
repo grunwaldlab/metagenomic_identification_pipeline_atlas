@@ -1,0 +1,160 @@
+pipeline_id,tool_id,stage,role
+taxt,fastp,Read preprocessing,Optional QC and trimming
+taxt,kraken2,Read classification,K-mer candidate discovery
+taxt,centrifuge,Read classification,Alternative candidate discovery
+taxt,bwamem2,Reference validation,Short-read alignment for evidence review
+taxt,minimap2,Reference validation,Long-read alignment for evidence review
+taxt,multiqc,Reporting,Process and QC summary
+taxprofiler,fastqc,Read QC,Read quality reports
+taxprofiler,fastp,Read preprocessing,Optional short-read trimming
+taxprofiler,bowtie2,Host filtering,Optional host subtraction
+taxprofiler,minimap2,Host filtering,Optional long-read host subtraction
+taxprofiler,kraken2,Read classification,K-mer taxonomic assignments
+taxprofiler,bracken,Abundance estimation,Kraken profile refinement
+taxprofiler,centrifuge,Read classification,Reference-index taxonomic assignments
+taxprofiler,kaiju,Read classification,Translated protein classification
+taxprofiler,malt,Read classification,Alignment-based taxonomy option
+taxprofiler,diamond,Read classification,Translated alignment classification
+taxprofiler,metaphlan,Read profiling,Marker-gene abundance profiles
+taxprofiler,motus,Read profiling,Marker-gene abundance profiles
+taxprofiler,taxpasta,Output standardization,Normalize classifier outputs
+taxprofiler,multiqc,Reporting,QC and process report
+taxprofiler,krona,Reporting,Interactive taxonomy visualization
+czid,star,Host filtering,Host read subtraction
+czid,trimmomatic,Read preprocessing,Adapter trimming
+czid,priceseqfilter,Read filtering,Filter on uncalled bases and quality
+czid,cdhitdup,Read filtering,Duplicate removal
+czid,gsnap,Read classification,Alignment to NCBI nucleotide reference
+czid,rapsearch2,Read classification,Protein-space alignment to reference
+czid,spades,Assembly,Assemble filtered reads into contigs
+czid,bowtie2,Read mapping,Map reads to contigs and host references
+edge,kraken2,Read classification,Read-level taxonomic profiling
+edge,metaphlan,Read profiling,Marker-gene profiling
+edge,gottcha,Read classification,Signature-based microbial detection
+edge,gottcha2,Read classification,Updated signature-based microbial detection
+edge,bwa,Reference mapping,Map reads against RefSeq references
+edge,blastplus,Sequence annotation,Reference alignment/annotation
+biobakery,kneaddata,Read preprocessing,Quality and host-read filtering
+biobakery,bowtie2,Host filtering,Host read removal within KneadData
+biobakery,metaphlan,Read profiling,Marker-based taxonomic abundance
+biobakery,humann,Functional profiling,Functional and pathway profiles
+biobakery,strainphlan,Strain profiling,Optional strain-level analysis
+biobakery,pweave,Reporting,Separate HTML/PDF visualization workflow
+squeezemeta,megahit,Assembly,Short-read assembly
+squeezemeta,prodigal,Gene prediction,Identify microbial ORFs
+squeezemeta,diamond,Taxonomic annotation,Protein homology searches
+squeezemeta,blastplus,Taxonomic annotation,Supplemental homology searches
+squeezemeta,bowtie2,Read mapping,Estimate coverage and abundance
+squeezemeta,bwa,Read mapping,Estimate coverage and abundance
+squeezemeta,gtdbtk,Genome taxonomy,Optional MAG taxonomy
+homebio,kraken2,Read classification,K-mer taxonomic classification
+homebio,kaiju,Read classification,Translated protein taxonomic classification
+homebio,bowtie2,Read mapping,Host/reference alignment
+homebio,spades,Assembly,Optional de novo assembly
+mocat2,mocat2profiler,Read profiling,Maps reads to RefMG.v1 or mOTU.v1 marker catalogs
+riems,blastplus,Sequence classification,Search NCBI nucleotide/protein references
+riems,knitr,Reporting,Optional PDF report generation
+riems,latex,Reporting,Compile PDF result protocol
+metashot,faqcs,Read preprocessing,Paired-end read quality processing
+metashot,star,Host filtering,Host read subtraction
+metashot,bowtie2,Read mapping,Map reads against selected references
+metashot,tango,Taxonomic classification,Assign taxonomy from read alignments
+metashot,krona,Reporting,Taxonomic visualization
+nfmag,fastp,Read preprocessing,Short/long-read QC and trimming
+nfmag,kraken2,Read classification,Optional read-level taxonomy
+nfmag,centrifuge,Read classification,Optional read-level taxonomy
+nfmag,megahit,Assembly,Metagenome assembly
+nfmag,spades,Assembly,Alternative metagenome assembly
+nfmag,metabat2,Genome binning,Recover MAGs
+nfmag,maxbin2,Genome binning,Alternative binning
+nfmag,concoct,Genome binning,Alternative binning
+nfmag,cat,Genome taxonomy,Taxonomic placement of contigs/bins
+nfmag,gtdbtk,Genome taxonomy,Taxonomic placement of MAGs
+nfmag,checkm,Genome quality,Assess MAG completeness and contamination
+nfmag,busco,Genome quality,Assess conserved single-copy marker completeness
+nfmag,genomad,Viral identification,Optional viral contig classification
+nfmag,tiara,Eukaryote identification,Optional eukaryotic sequence classification
+nfmag,multiqc,Reporting,QC and workflow report
+nfmag,nextflow,Workflow orchestration,Execute pipeline processes
+atlas,metaspades,Assembly,Short-read metagenome assembly
+atlas,megahit,Assembly,Alternative short-read metagenome assembly
+atlas,metabat2,Genome binning,Recover MAGs
+atlas,maxbin2,Genome binning,Alternative binning
+atlas,dastool,Genome binning,Refine bins from multiple binners
+atlas,checkm,Genome quality,Assess MAG completeness and contamination
+atlas,gtdbtk,Genome taxonomy,Assign taxonomy to recovered MAGs
+atlas,snakemake,Workflow orchestration,Execute workflow rules
+mgnify5,motus,Read profiling,Microbial marker-gene profiles
+mgnify5,infernal,Ribosomal classification,Search SSU/LSU covariance models
+mgnify5,mapseq,Ribosomal classification,Assign taxonomy to marker sequences
+mgnify5,hmmer,Functional annotation,Search protein profile models
+mgnify5,interproscan,Functional annotation,Protein-domain/signature annotation
+mgnify5,eggnogmapper,Functional annotation,Orthology annotation
+mgnify5,diamond,Functional annotation,Protein homology searches
+metawrap,kraken2,Read/contig classification,Optional taxon profiling
+metawrap,megahit,Assembly,Assemble shotgun reads
+metawrap,spades,Assembly,Alternative assembly
+metawrap,metabat2,Genome binning,Recover and refine MAGs
+metawrap,maxbin2,Genome binning,Alternative binning
+metawrap,concoct,Genome binning,Alternative binning
+metawrap,checkm,Genome quality,Assess MAG completeness and contamination
+imp,megahit,Assembly,Short-read metagenome assembly
+imp,idbaud,Assembly,Alternative uneven-depth metagenome assembly
+imp,cap3,Assembly,Contig assembly/merging
+imp,maxbin2,Genome binning,Recover genome bins
+imp,prodigal,Gene prediction,Predict microbial genes
+imp,snakemake,Workflow orchestration,Execute integrated workflow
+mgtk,megahit,Assembly,Short-read metagenome assembly
+mgtk,metaflye,Assembly,Long-read metagenome assembly
+mgtk,metamdbg,Assembly,Long-read metagenome assembly
+mgtk,metabat2,Genome binning,Recover MAGs
+mgtk,semibin2,Genome binning,Model-based binning
+mgtk,metacoag,Genome binning,Graph-based binning
+mgtk,gtdbtk,Genome taxonomy,Assign taxonomy to bacterial/archaeal MAGs
+mgtk,mmseqs2,Taxonomic classification,GTDB-based sequence taxonomy
+mgtk,nextflow,Workflow orchestration,Execute workflow processes
+kaptain,kma,Read classification,Long-read reference mapping and taxonomic classification
+kaptain,rasusa,Read preprocessing,Subsample by sequencing yield
+kaptain,seqtk,Read preprocessing,Read manipulation and filtering
+viroprofiler,spades,Assembly,Viral metagenome assembly
+viroprofiler,genomad,Viral identification,Detect viral sequences
+viroprofiler,vibrant,Viral identification,Optional viral contig detection
+viroprofiler,virsorter2,Viral identification,Detect candidate viral contigs
+viroprofiler,vcontact3,Viral taxonomy,Classify viral genomes by protein/genome similarity
+viroprofiler,vitap,Viral annotation,Taxonomic and functional annotation
+viroprofiler,kraken2,Read classification,Optional viral read classification
+viroprofiler,bracken,Abundance estimation,Refine Kraken viral abundance estimates
+viroprofiler,nextflow,Workflow orchestration,Execute workflow processes
+virmake,metaspades,Assembly,Assemble paired-end viral metagenomic reads
+virmake,virsorter2,Viral identification,Detect viral contigs
+virmake,genomad,Viral identification,Detect viral contigs
+virmake,checkv,Viral quality,Assess completeness and contamination
+virmake,galah,Dereplication,Cluster representative viral genomes/vOTUs
+virmake,prodigal,Gene prediction,Predict viral genes
+virmake,vcontact2,Viral taxonomy,Assign viral taxonomy from protein similarity networks
+virmake,dramv,Functional annotation,Annotate viral genes/functions
+nfviral,spades,Assembly,Optional short-read viral assembly
+nfviral,trinity,Assembly,Optional RNA-seq/viral transcript assembly
+nfviral,megahit,Assembly,Alternative short-read assembly
+nfviral,kraken2,Read classification,Optional viral diversity profiling
+nfviral,kaiju,Read classification,Optional translated viral classification
+nfviral,bracken,Abundance estimation,Refine Kraken viral abundance estimates
+nfviral,blastplus,Sequence classification,BLASTn contig/reference search
+nfviral,bowtie2,Read mapping,Map reads to reconstructed viral genomes
+nfviral,bwamem2,Read mapping,Alternative read mapping
+nfviral,multiqc,Reporting,QC and process report
+nfviral,nextflow,Workflow orchestration,Execute pipeline processes
+metavirs,kraken2,Read classification,Classify metagenomic reads
+metavirs,cat,Contig taxonomy,Taxonomic assignment by gene-level homology voting
+metavirs,diamond,Sequence classification,Protein similarity searches for CAT
+metavirs,megahit,Assembly,Assemble viral metagenomic reads
+metavirs,metaspades,Assembly,Alternative paired-end assembly
+metavirs,blastplus,Sequence classification,BLASTn viral contig/reference search
+metavirs,krona,Reporting,Taxonomic visualization
+metavirs,snakemake,Workflow orchestration,Execute workflow rules
+surpi,snap,Read classification,Fast nucleotide alignment against local indexes
+surpi,rapsearch2,Read classification,Protein-space homology search
+surpi,minimo,Assembly,Optional contig assembly
+surpi,abyss,Assembly,Optional contig assembly
+surpi,cutadapt,Read preprocessing,Trim reads
+surpi,prinseq,Read preprocessing,Filter reads

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>tools – Shotgun Pipeline Atlas</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-40e841b0ef4924de0e19df648c0369d1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link href="site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.34.0/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet">
+<script src="site_libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="site_libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet">
+<script src="site_libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Shotgun Pipeline Atlas</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./pipelines.html"> 
+<span class="menu-text">Pipelines</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./tools.html" aria-current="page"> 
+<span class="menu-text">Tools</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./taxa.html"> 
+<span class="menu-text">Taxa</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./resources.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./strategies.html"> 
+<span class="menu-text">Strategies</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="tool-catalogue" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="tool-catalogue">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1\" data-max=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1\" data-max=\"1024\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1\" data-max=\"4\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"950\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"100\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","data":[["fastp","FastQC","Trimmomatic","cutadapt","FaQCs","PRINSEQ-lite","Rasusa","seqtk","CD-HIT-DUP","PriceSeqFilter","Kraken 2","Bracken","Centrifuge","GOTTCHA","GOTTCHA2","Kaiju","MetaPhlAn","mOTUs","MALT","DIAMOND","BLAST+","KMA","SNAP","RAPSearch2","TANGO","Bowtie 2","minimap2","BWA","BWA-MEM2","STAR","GSNAP","MEGAHIT","metaSPAdes","SPAdes","IDBA-UD","CAP3","ABySS","Minimo","Prodigal","MetaBAT2","MaxBin 2","CONCOCT","DAS Tool","GTDB-Tk","CheckM","BUSCO","CAT","MMseqs2","SemiBin2","MetaCoAG","geNomad","VIBRANT","VirSorter2","CheckV","Galah","vConTACT2","vConTACT3","VITAP","DRAM-v","Tiara","HMMER","Infernal","MapSeq","InterProScan","eggNOG-mapper","MultiQC","Krona","Taxpasta","KneadData","HUMAnN","StrainPhlAn","Snakemake","Nextflow","Pweave","knitr","LaTeX","metaFlye","metaMDBG","Trinity","MOCAT2 profiling modules"],[3,1,1,1,1,1,1,1,1,1,9,3,3,1,1,3,3,2,1,4,5,1,1,2,1,7,2,2,2,2,1,8,3,6,1,1,1,1,3,4,4,2,1,4,3,1,2,1,1,1,3,1,2,1,1,1,1,1,1,1,1,1,1,1,1,4,3,1,1,1,1,3,4,1,1,1,1,1,1,1],["Read QC and adapter/quality trimming","Read quality assessment","Adapter and quality trimming","Adapter and quality trimming","Paired-read QC and filtering","Read quality filtering and statistics","Read subsampling by coverage or size","Read manipulation and subsampling","Duplicate read identification/removal","IDseq quality filtering by uncalled bases and quality","Read classification by k-mer minimizers","Re-estimates taxonomic abundance from Kraken reports","Read classification using compressed FM indexes","Read classification using signature genome segments","Updated signature-based microbial classification","Translated protein-space classification of reads","Marker-gene microbial taxonomic profiling","Microbial marker-gene profiling and abundance estimation","Alignment-based read classification against DNA/protein databases","Fast translated protein homology search and taxonomic annotation","Nucleotide/protein alignment and reference validation","Mapping/classification of reads against template sequences","Short-read nucleotide alignment against local indexes","Fast protein-space homology search","Taxonomic assignment from read-to-reference alignments","Short-read alignment and host/reference mapping","Long-read and assembly-to-reference mapping","Short-read alignment to reference genomes","Fast short-read alignment for evidence validation","Spliced/host read alignment and subtraction","Splice-aware nucleotide alignment and pathogen read search","De novo short-read metagenome assembly","Metagenomic assembly for complex communities","Short-read genome/metagenome assembly","Uneven-depth metagenomic assembly","Contig assembly/merging","De novo short-read assembly","Contig assembly/overlap layout","Prokaryotic gene prediction from contigs","Metagenome genome binning from contigs and coverage","Genome binning from contigs and abundance","Genome binning from contig composition and coverage","Refines and dereplicates genome bins from multiple binners","Taxonomic placement of bacterial/archaeal genomes and MAGs","Genome/MAG completeness and contamination assessment","Assesses genome completeness using conserved single-copy orthologs","Contig and MAG taxonomy by gene-level homology voting","Protein/nucleotide search and taxonomic classification","Metagenomic genome binning with self-supervised models","Metagenomic contig binning using composition and coverage","Viral/plasmid sequence detection and taxonomic annotation","Viral contig detection and functional annotation","Viral sequence identification from contigs","Viral genome quality/completeness and host-boundary assessment","Viral genome dereplication and clustering","Viral taxonomy from protein-sharing networks","Viral taxonomic clustering from genome/protein similarity","Viral taxonomic/functional annotation within ViroProfiler","Viral gene and metabolic-function annotation","Classifies contigs by cellular domain including eukaryotes","Profile-HMM search for protein/domain annotation","Searches RNA covariance models such as SSU/LSU profiles","Taxonomic assignment of ribosomal RNA sequences","Protein-domain/signature functional annotation","Orthology-based functional annotation","Aggregates quality-control and workflow logs into a report","Interactive visualization of taxonomic abundance","Standardizes and merges taxonomy profiling outputs","Read preprocessing and host-contamination filtering","Functional profiling of microbial communities","Marker-based strain-level profiling","Workflow orchestration and rule-based execution","Workflow orchestration and portable task execution","Weaves analysis code and results into reproducible HTML/PDF reports","Generates dynamic reports from R code and text","Typesets PDF reports from source documents","Long-read metagenome assembly","Long-read metagenome assembly using minimizer-space de Bruijn graphs","De novo transcriptome/RNA-seq assembly","Read mapping/profile generation against marker/reference catalogs"],["TaxTriage; nf-core/taxprofiler; nf-core/mag","nf-core/taxprofiler","CZ ID local short-read MNGS workflow","SURPI","MetaShot","SURPI","KAPTAIN","KAPTAIN","CZ ID local short-read MNGS workflow","CZ ID local short-read MNGS workflow","TaxTriage; nf-core/taxprofiler; EDGE Bioinformatics; HOME-BIO; nf-core/mag; MetaWRAP; ViroProfiler; nf-core/viralmetagenome; metavirs","nf-core/taxprofiler; ViroProfiler; nf-core/viralmetagenome","TaxTriage; nf-core/taxprofiler; nf-core/mag","EDGE Bioinformatics","EDGE Bioinformatics","nf-core/taxprofiler; HOME-BIO; nf-core/viralmetagenome","nf-core/taxprofiler; EDGE Bioinformatics; bioBakery workflows wmgx","nf-core/taxprofiler; MGnify pipeline v5","nf-core/taxprofiler","nf-core/taxprofiler; SqueezeMeta; MGnify pipeline v5; metavirs","EDGE Bioinformatics; SqueezeMeta; RIEMS; nf-core/viralmetagenome; metavirs","KAPTAIN","SURPI","CZ ID local short-read MNGS workflow; SURPI","MetaShot","nf-core/taxprofiler; CZ ID local short-read MNGS workflow; bioBakery workflows wmgx; SqueezeMeta; HOME-BIO; MetaShot; nf-core/viralmetagenome","TaxTriage; nf-core/taxprofiler","EDGE Bioinformatics; SqueezeMeta","TaxTriage; nf-core/viralmetagenome","CZ ID local short-read MNGS workflow; MetaShot","CZ ID local short-read MNGS workflow","SqueezeMeta; nf-core/mag; ATLAS; MetaWRAP; IMP; Metagenomics-Toolkit; nf-core/viralmetagenome; metavirs","ATLAS; VirMake; metavirs","CZ ID local short-read MNGS workflow; HOME-BIO; nf-core/mag; MetaWRAP; ViroProfiler; nf-core/viralmetagenome","IMP","IMP","SURPI","SURPI","SqueezeMeta; IMP; VirMake","nf-core/mag; ATLAS; MetaWRAP; Metagenomics-Toolkit","nf-core/mag; ATLAS; MetaWRAP; IMP","nf-core/mag; MetaWRAP","ATLAS","SqueezeMeta; nf-core/mag; ATLAS; Metagenomics-Toolkit","nf-core/mag; ATLAS; MetaWRAP","nf-core/mag","nf-core/mag; metavirs","Metagenomics-Toolkit","Metagenomics-Toolkit","Metagenomics-Toolkit","nf-core/mag; ViroProfiler; VirMake","ViroProfiler","ViroProfiler; VirMake","VirMake","VirMake","VirMake","ViroProfiler","ViroProfiler","VirMake","nf-core/mag","MGnify pipeline v5","MGnify pipeline v5","MGnify pipeline v5","MGnify pipeline v5","MGnify pipeline v5","TaxTriage; nf-core/taxprofiler; nf-core/mag; nf-core/viralmetagenome","nf-core/taxprofiler; MetaShot; metavirs","nf-core/taxprofiler","bioBakery workflows wmgx","bioBakery workflows wmgx","bioBakery workflows wmgx","ATLAS; IMP; metavirs","nf-core/mag; Metagenomics-Toolkit; ViroProfiler; nf-core/viralmetagenome","bioBakery workflows wmgx","RIEMS","RIEMS","Metagenomics-Toolkit","Metagenomics-Toolkit","nf-core/viralmetagenome","MOCAT2"],["<a href=\"https://github.com/OpenGene/fastp\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/s-andrews/FastQC\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/usadellab/Trimmomatic\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/marcelm/cutadapt\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/LANL-Bioinformatics/FaQCs\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/uwb-linux/prinseq\" target=\"_blank\" rel=\"noopener noreferrer\">Source mirror<\/a>","<a href=\"https://github.com/mbhall88/rasusa\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/lh3/seqtk\" target=\"_blank\" rel=\"noopener noreferrer\">Source repository<\/a>","<a href=\"https://github.com/weizhongli/cdhit\" target=\"_blank\" rel=\"noopener noreferrer\">Source repository<\/a>","<a href=\"https://github.com/chanzuckerberg/idseq-workflows/tree/main/short-read-mngs/idseq-dag/idseq_dag/steps\" target=\"_blank\" rel=\"noopener noreferrer\">Pipeline implementation<\/a>","<a href=\"https://github.com/DerrickWood/kraken2\" target=\"_blank\" rel=\"noopener noreferrer\">Source and manual<\/a>","<a href=\"https://github.com/jenniferlu717/Bracken\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/DaehwanKimLab/centrifuge\" target=\"_blank\" rel=\"noopener noreferrer\">Source and manual<\/a>","<a href=\"https://github.com/poeli-lanl/GOTTCHA\" target=\"_blank\" rel=\"noopener noreferrer\">Archived source repository<\/a>","<a href=\"https://github.com/poeli-lanl/GOTTCHA2\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/bioinformatics-centre/kaiju\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/biobakery/MetaPhlAn\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/motu-tool/mOTUs\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/malt/\" target=\"_blank\" rel=\"noopener noreferrer\">Official software page; source code not publicly browsable there<\/a>","<a href=\"https://github.com/bbuchfink/diamond\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/\" target=\"_blank\" rel=\"noopener noreferrer\">NCBI source and manual<\/a>","<a href=\"https://bitbucket.org/genomicepidemiology/kma/src/master/\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/amplab/snap\" target=\"_blank\" rel=\"noopener noreferrer\">Source repository<\/a>","<a href=\"https://github.com/zhaoyanswill/RAPSearch2\" target=\"_blank\" rel=\"noopener noreferrer\">Source repository<\/a>","<a href=\"https://github.com/bfosso/MetaShot\" target=\"_blank\" rel=\"noopener noreferrer\">Implementation bundled in MetaShot<\/a>","<a href=\"https://github.com/BenLangmead/bowtie2\" target=\"_blank\" rel=\"noopener noreferrer\">Source and manual<\/a>","<a href=\"https://github.com/lh3/minimap2\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/lh3/bwa\" target=\"_blank\" rel=\"noopener noreferrer\">Source repository<\/a>","<a href=\"https://github.com/bwa-mem2/bwa-mem2\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/alexdobin/STAR\" target=\"_blank\" rel=\"noopener noreferrer\">Source and manual<\/a>","<a href=\"https://github.com/juliangehring/GMAP-GSNAP\" target=\"_blank\" rel=\"noopener noreferrer\">Source mirror<\/a>","<a href=\"https://github.com/voutcn/megahit\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/ablab/spades\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/ablab/spades\" target=\"_blank\" rel=\"noopener noreferrer\">Source and manual<\/a>","<a href=\"https://github.com/loneknightpy/idba\" target=\"_blank\" rel=\"noopener noreferrer\">Source repository<\/a>","<a href=\"https://faculty.sites.iastate.edu/xqhuang/cap3-assembly-program\" target=\"_blank\" rel=\"noopener noreferrer\">Official download page; non-profit use conditions apply<\/a>","<a href=\"https://github.com/bcgsc/abyss\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/amosproject/amos\" target=\"_blank\" rel=\"noopener noreferrer\">Source project<\/a>","<a href=\"https://github.com/hyattpd/Prodigal\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://bitbucket.org/berkeleylab/metabat/src/master/\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://sourceforge.net/projects/maxbin/\" target=\"_blank\" rel=\"noopener noreferrer\">Source/downloads<\/a>","<a href=\"https://github.com/BinPro/CONCOCT\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/cmks/DAS_Tool\" target=\"_blank\" rel=\"noopener noreferrer\">Source repository<\/a>","<a href=\"https://github.com/Ecogenomics/GTDBTk\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/Ecogenomics/CheckM\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://gitlab.com/ezlab/busco\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/MGXlab/CAT_pack\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/soedinglab/MMseqs2\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/BigDataBiology/SemiBin\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/metagentools/MetaCoAG\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/apcamargo/genomad\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/AnantharamanLab/VIBRANT\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/jiarong/VirSorter2\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://bitbucket.org/berkeleylab/checkv/\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/wwood/galah\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://bitbucket.org/MAVERICLab/vcontact2/\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/deng-lab/viroprofiler\" target=\"_blank\" rel=\"noopener noreferrer\">Workflow-integrated implementation; no standalone source repository verified<\/a>","<a href=\"https://github.com/deng-lab/viroprofiler\" target=\"_blank\" rel=\"noopener noreferrer\">Implementation in ViroProfiler workflow<\/a>","<a href=\"https://github.com/WrightonLabCSU/DRAM\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/ibe-uw/tiara\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/EddyRivasLab/hmmer\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/EddyRivasLab/infernal\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/EBI-Metagenomics/pipeline-v5\" target=\"_blank\" rel=\"noopener noreferrer\">MGnify v5 CWL wrapper; standalone source repository not verified<\/a>","<a href=\"https://github.com/ebi-pf-team/interproscan\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/eggnogdb/eggnog-mapper\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/MultiQC/MultiQC\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/marbl/Krona\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/taxprofiler/taxpasta\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/biobakery/kneaddata\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/biobakery/humann\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/biobakery/biobakery_workflows\" target=\"_blank\" rel=\"noopener noreferrer\">Implemented in bioBakery workflows<\/a>","<a href=\"https://github.com/snakemake/snakemake\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/nextflow-io/nextflow\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/mpastell/Pweave\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/yihui/knitr\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://www.latex-project.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Official project documentation<\/a>","<a href=\"https://github.com/fenderglass/Flye\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/GaetanBenoitDev/metaMDBG\" target=\"_blank\" rel=\"noopener noreferrer\">Source repository<\/a>","<a href=\"https://github.com/trinityrnaseq/trinityrnaseq\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>","<a href=\"https://github.com/mocat2/mocat2\" target=\"_blank\" rel=\"noopener noreferrer\">Source and documentation<\/a>"],["<a href=\"https://doi.org/10.1002/imt2.70078\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://www.bioinformatics.babraham.ac.uk/projects/fastqc/\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btu170\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.14806/ej.17.1.200\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/1471-2105-15-376\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btr026\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.21105/joss.03941\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","N/R","<a href=\"https://doi.org/10.1093/bioinformatics/bts565\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1534/g3.113.005967\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/s13059-019-1891-0\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.7717/peerj-cs.104\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1101/gr.210641.116\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/nar/gkv180\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/nar/gkv180\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/ncomms11257\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/s41587-023-01688-w\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/s40168-022-01410-z\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btv455\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/s41592-021-01101-x\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/1471-2105-10-421\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1128/JCM.00336-18\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://arxiv.org/abs/1111.5572\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btr595\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btt256\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/nmeth.1923\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/bty191\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btp324\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1109/IPDPS.2019.00041\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/bts635\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btq057\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btv033\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1101/gr.213959.116\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/bts100\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/bts174\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/nar/27.24.4876\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1101/gr.089532.108\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1101/gr.4.2.124\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/1471-2105-11-119\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/s41587-019-0208-8\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/s40168-015-0131-8\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/nmeth.3103\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/s41467-018-03534-7\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btac672\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1101/gr.186072.114\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/molbev/msab199\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/s13059-019-1817-x\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/nbt.3988\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/s13059-023-03017-5\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btaa1025\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/s41587-023-01953-y\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/s40168-020-00867-0\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/s40168-020-00990-y\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/s41587-020-00774-7\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","N/R","<a href=\"https://doi.org/10.1038/s41587-019-0100-8\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","N/R","<a href=\"https://doi.org/10.1080/19490976.2023.2192522\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/nar/gkaa621\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btab672\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1371/journal.pcbi.1002195\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btt509\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/nar/gkac1080\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/nar/gku479\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/molbev/msab293\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btw354\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1186/1471-2105-12-385\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.21105/joss.05627\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://github.com/biobakery/kneaddata\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/s41587-018-0008-8\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/nmeth.3868\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.12688/f1000research.29032.1\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1038/nbt.3820\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","N/R","<a href=\"https://doi.org/10.32614/CRAN.package.knitr\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","N/R","<a href=\"https://doi.org/10.1038/s41587-019-0072-8\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","N/R","<a href=\"https://doi.org/10.1038/nprot.2013.084\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>","<a href=\"https://doi.org/10.1093/bioinformatics/btw183\" target=\"_blank\" rel=\"noopener noreferrer\">Reference<\/a>"],["Approx. 1-4 GB per job; optional duplication analysis can require more","Approx. 1-4 GB per concurrent job","Official guidance about 8 GiB single-end or 16 GiB paired-end for large data","Approx. 1-4 GB for ordinary short-read jobs","Approx. 1-8 GB","Approx. 1-8 GB; legacy Perl implementation varies","Usually under 1-2 GB","Usually under 1 GB for common operations","Approx. 4-32 GB on large read sets","Not reported; allow 2-16 GB pending local benchmark","Database-dependent; approx. 8-150+ GB","Approx. 1-8 GB beyond the Kraken database step","Approx. 4-80 GB depending on index","Official README recommends at least 8 GB RAM","Not specified; planning estimate 8-32 GB depending on reference bundle","Index RAM documented from about 0.5 GB (viruses) to 250 GB (nr with eukaryotes); database specific","Approx. 4-16 GB; version and database dependent","Approx. 4-16 GB; sample and marker DB dependent","Variable; large reference sets may require tens to hundreds of GB","Approx. 4-64 GB; block size and reference DB control use","Approx. 4-64+ GB; database and threading dependent","Index dependent; dense KAPTAIN index would exceed 1 TB; sparse indexing used","Historical SURPI test used 60.5 GB RAM; index-dependent","Paper reports up to 2 GB single-threaded and 3.5 GB at four threads","Not reported separately; post-processing of existing alignments","Approx. 4-32 GB; human index about 3.2 GB RAM per manual","Approx. 1-32 GB; reference and long-read workload dependent","Approx. 4-32 GB depending on reference","Human index about 10 GB plus overhead; microbial indexes smaller","Mammalian reference: at least 16 GB; 32 GB recommended by project","Not reported generally; index and reference dependent","Approx. 8-64 GB for typical metagenome scale; read count/complexity dependent","Approx. 32-128+ GB for complex samples; variable","Approx. 16-128+ GB depending on dataset","Approx. 16-128 GB; dataset dependent","Approx. 2-32 GB depending on contig count","Approx. 16-128 GB; k-mer and data size dependent","Not reported; typically input/contig dependent","Usually under 1-4 GB for sample-scale contigs","Approx. 2-16 GB; contig count and coverage dominate","Approx. 4-32 GB; data dependent","Approx. 4-32 GB; sample count and coverage matrix matter","Approx. 4-32 GB depending on number of bins","Approx. 100-140 GB for full archaeal/bacterial workflows; lower for selected tasks","Approx. 4-16 GB per batch; lineage workflow dependent","Approx. 4-32 GB depending on genome count and lineage dataset","Approx. 8-64 GB; DIAMOND and reference settings dominate","Approx. 8-128 GB depending on DB and search mode","Approx. 8-64 GB; assembly and coverage scale matter","Approx. 8-64 GB; contig count and coverage dependent","Approx. 8-32 GB; marker search and input size dependent","Approx. 8-32 GB; contig set and annotation DB dependent","Approx. 8-32 GB; ORF annotation and input scale matter","Approx. 4-16 GB for ordinary contig batches","Approx. 2-32 GB; genome collection size dependent","Approx. 16-64 GB; network and protein counts may push higher","Approx. 16-64 GB; reference network and protein count dependent","Not reported separately; depends on ViroProfiler module and input","Approx. 16-64 GB depending on annotation databases and batch","Approx. 1-4 GB","Approx. 4-32 GB; model count and sequence set dependent","Approx. 4-32 GB; model database and input dependent","Not reported; likely modest compared with DB search steps","Approx. 8-32 GB; enabled member databases and protein count matter","Approx. 16-64 GB depending on search mode and input","Approx. 1-4 GB; log count and report modules dependent","Approx. 1-4 GB for typical tables","Usually under 4 GB for sample-scale tables","Approx. 4-32 GB; host aligner/index dominates","Approx. 8-64 GB; database and sample dependent","Approx. 16-64 GB; number of samples and markers matter","Controller approx. 0.5-4 GB; task resources are separate","Controller approx. 0.5-4 GB; task resources are separate","Approx. 1-4 GB for typical report generation","Approx. 1-4 GB for typical report generation","Approx. 1-4 GB for report compilation","Approx. 16-128+ GB depending on long-read depth and complexity","Approx. 16-128+ GB; depth and community complexity dependent","Approx. 16-128+ GB; sample and k-mer settings dependent","Not reported; depends on sample and mapping configuration"],["High","Medium","Medium","High","Medium","Low","High","High","Medium","Medium","High","High","High","High","High","Medium","High","Medium","Medium","High","Low","High","High","High","High","High","High","High","High","High","Medium","Medium","Low","Low","Low","Medium","Low","Medium","High","Medium","Medium","Medium","Medium","Low-Medium","Medium","Medium","Medium","High","Medium","Medium","Medium","Medium","Low-Medium","Medium","Medium","Low-Medium","Low-Medium","Medium","Low-Medium","High","Medium","Low-Medium","Medium","Low-Medium","High","High","High","High","Medium","Medium","Low-Medium","N/A","N/A","High","High","High","Low","Low","Low","Medium"],["None","None","Adapter FASTA is negligible","None","None","None","None","None","None","None","Approx. 10-150+ GB installed depending on database; historical standard hash table 29 GB; about 100 GB build space in old manual example","Uses Kraken database plus read-length-specific distribution files; no universal added size","Official examples about 4-12 GB for selected compact indexes; broader indexes can be much larger","Historical compressed bacterial DB archives about 3.8-4.6 GB; viral archives about 68-71 MB","Database bundle required; current aggregate size not stated in project README","Official docs recommend at least 500 GB free to construct some DBs; installed DB sizes vary","Marker reference database; release dependent, typically GB-scale; exact current footprint varies","Marker database; exact installed footprint varies by release","User-selected nucleotide/protein index; N/R universally","Protein DB from tens to hundreds of GB; custom/reference dependent","Local nt/nr databases commonly hundreds of GB to TB-scale including indexes; release dependent","Template index size varies; dense indexes can be impractically large","Historical SURPI nt database indexes about 27 GB each x29 (~783 GB total, 2013 data)","Protein DB/index dependent; no universal size","No standalone database; consumes alignments and taxonomy tables","Human index approx. 3-4 GB; microbial indexes depend on reference set","Reference index often GB-scale; exact size follows input reference","Human reference index several GB; custom databases vary","Human index about 10 GB; custom reference sets vary","Human/mammalian genome index tens of GB; microbial indexes smaller","Human suffix array documented about 15 GB disk; full indexes vary","None","None","None","None","None","None","None","None","None","None","None","None","GTDB-Tk R232 database about 100 GB; full tree option about 950 GB","Reference data roughly 1-2 GB; release dependent","Lineage datasets typically hundreds of MB to a few GB","Protein reference/index from tens to hundreds of GB; custom DB dependent","Reference database from GB to 100s of GB; DB dependent","None; optional pretrained model files are small","None","Bundled/downloaded database GB-scale; version-dependent","HMM/profile database; exact current footprint not standardized","Profile/HMM database; release-specific and not one stable size","Reference database required; exact footprint varies by release","None","Viral reference collection and protein clusters; release-dependent, often tens to hundreds GB","Reference network/database size is release-dependent; N/R universally","Uses workflow-selected viral references; size not reported separately","Optional annotation DBs can require tens to hundreds of GB; exact config-dependent","None large","Profile libraries from MB to many GB; selected database dependent","Rfam/SILVA covariance models; database size release-dependent","SILVA reference database; version and index size dependent","Large signature libraries; allow tens to 100+ GB depending on release/options","Core eggNOG v7 data about 45 GB; optional MMseqs/Pfam data add storage","None","No sequence reference DB; taxonomy/name data may be small","None","Host reference index commonly several to tens of GB","ChocoPhlAn/UniRef databases range from tens to 100s of GB depending on install","Uses MetaPhlAn marker databases, generally GB-scale","None","None","None","None","None","None","None","None","RefMG.v1 and mOTU.v1 reference catalogs; sizes not consistently stated"],["Filtered FASTQ is roughly input-sized; typically a few GB for 10M read pairs","HTML/ZIP reports generally MB-scale","Trimmed FASTQ roughly input-sized; paired and unpaired outputs may both be retained","Filtered FASTQ roughly input-sized","Filtered FASTQ roughly input-sized; optional reports are small","Filtered FASTQ roughly input-sized","Output is proportional to requested subsample","Output is proportional to selected reads","Deduplicated FASTQ is roughly input-sized","Filtered reads roughly input-sized","Per-read reports vary from MB to several GB; detailed assignments scale with read count","Abundance tables generally small; intermediate reports depend on Kraken output","Per-read classification output scales with sample; summaries are small","Summary table small; full mode retains per-read and intermediate files","Taxonomic tables small; optional extracted FASTQ can be read-sized","Read-level output scales with sample; reports usually smaller","Final profiles are small; intermediate alignment files vary","Profile tables small; optional mapped reads can be larger","Alignment files can be large; reports vary","Tabular alignments can range from MB to many GB","Alignment output can be many GB; depends on queries and hit limits","Per-read output variable; summaries small","Alignment and coverage files vary; potentially many GB","Hit tables vary with query count","Small taxon tables; depends on upstream alignment files","SAM may be 10s GB; BAM commonly 1-20 GB per sample","PAF/SAM/BAM ranges from MB to many GB","SAM/BAM output can be 1-20+ GB","SAM/BAM output can be 1-20+ GB","SAM can be very large; BAM often several to tens of GB","Alignment output can be large; N/R as a portable range","Contigs commonly 0.1-10 GB; temporary workspace can be much larger","Contigs 0.1-10 GB; temporary graph may require 10s of GB","Assembly 0.1-10 GB; working directory may be much larger","Assembly 0.1-10 GB; temporary workspace variable","Contig outputs generally below input assembly size; N/R","Assembly 0.1-10 GB; temporary files may be larger","Contig output size depends on input; N/R","GFF/protein/ORF output MB to low GB, proportional to assembly","Bin FASTAs and tables hundreds MB to several GB; BAMs excluded","Bin FASTAs and summaries hundreds MB to a few GB","Cluster tables/bins hundreds MB to a few GB","Bin summaries and selected FASTAs generally MB to GB","Taxonomy tables and placement files variable; typically MB to GB","Summary/marker outputs usually MB to hundreds of MB","Summary and marker outputs MB to GB","Gene/contig classifications usually MB to GB; alignments can be large","Alignment and taxonomy tables variable; can reach many GB","Bins and intermediate features hundreds MB to GB","Bins and summaries hundreds MB to GB","Taxonomy tables and sequences usually MB to GB; intermediate files vary","Viral contigs and annotation tables usually MB to GB","Candidate contigs and scoring tables usually MB to GB","Filtered viral FASTA and tables MB to hundreds MB","Cluster tables small; representative FASTA bounded by input","Network files/tables hundreds MB to many GB","Network and result files can be hundreds MB to many GB","Annotation tables typically MB to GB","Annotation tables hundreds MB to several GB","Small classification table; optional extracted FASTA scales with input","Hit tables scale with sequences and profiles","Search tables and marker outputs generally MB to GB","Taxonomic marker tables typically small","Annotations may range MB to several GB","Tabular annotation scales with predicted proteins; MB to GB","HTML report usually MB to hundreds of MB","HTML report generally MB to tens of MB","Output tables usually MB to low GB","Filtered FASTQ roughly input-sized; intermediates may duplicate input","Profile tables small; alignments/intermediates may be GB-scale","Alignments and strain trees MB to GB","None as a tool; workflow outputs are separate","None as a tool; workflow outputs are separate","HTML/PDF reports usually MB-scale","Report and figures usually MB to hundreds of MB","PDF reports usually MB-scale","Assembly 0.1-10+ GB; temporary graph files can be much larger","Assembly 0.1-10+ GB; intermediate storage variable","Assembly and intermediates can be multiple GB to 10s of GB","Taxon abundance tables usually small; alignment intermediates can be large"],["Approximate planning estimate for 10M paired 2x150 reads; depends on options and compression","No cleaned reads are generated","Official README large-dataset guidance; sample output depends on retention","Approximate planning range; runtime is data and pattern dependent","Approximate planning range; optional steps add memory","Planning estimate only; project is legacy","Source benchmarks report low memory for tested workloads","No standalone citation/resource benchmark located","Planning range; memory depends on sequence count and settings","This workflow uses PriceSeqFilter; it is not the iterative assembly stage","Historical manual figures are explicitly dated; RAM chiefly follows selected index","Post-classification step; database size follows Kraken DB and release","Official database examples vary by included taxa and index format","Database examples are compressed archive sizes from the archived 2015 README","Current beta README describes database downloads but gives no general resource profile","Values depend strongly on RefSeq/nr/protein collection; do not treat as one range","Planning range rather than a published universal minimum","No stable database/output size published","Resource estimates depend on database and search mode","DB and result sizes are query/reference and hit-limit dependent","No stable current DB/output size; NCBI releases update frequently","The &gt;1 TB note is specific to KAPTAIN's large dense index, not general KMA RAM","Historical figures are SURPI-specific and should not be used as current DB estimates","Paper's speed comparison is historical and not a current benchmark","Tool implementation is bundled in MetaShot","Manual index RAM is a documented example; output varies by mapped fraction/format","Planning range, not universal","Output size depends on format and mapped read count","Source README index figure; not a pipeline total","Official guidance for mammalian genomes; depends on reference and output","Reference/index build drives resource requirements","Planning range; no reference DB required","Planning estimate; low-abundance complexity increases memory/storage","Dataset and mode dependent","Planning range; legacy tool/dependencies may affect practicality","Planning estimate; used on assembled contigs rather than raw reads","Planning estimate, not comparable benchmark","Legacy assembler used optionally by SURPI","No reference database needed","Planning range; no reference DB","Approximate batch scale; no DB","Approximate; intermediate coverage data excluded","Does not search a reference taxonomy database","Official R232 documentation; genome-level analysis, not raw-read profiling","Planning range for MAG batches","Genome quality step; lineage database selected by taxon","Planning estimate; database and intermediate hits dominate","Large reference searches and sensitivity settings dominate","Planning range; assembly and read mapping excluded","Planning estimate; not a reference taxonomy search","Planning range; verify database release footprint","Planning estimate; contig-level tool","Planning envelope; database searches and IO may dominate","Approximate; depends on contig count","No general resource benchmark found","Planning range; scales with input/reference network","Approximate planning range; no portable benchmark found","Tool-level resources not benchmarked apart from pipeline","Planning envelope; databases and input gene count dominate","Standalone model; no reference DB","Planning range; not a general taxonomy classifier","MGnify v5 uses Infernal cmsearch; Rfam is a database, not the tool","MGnify pipeline component; exact resource profile not reported","Functional annotation rather than organism classification","Official docs list approx. 45 GB core data; functional annotation not organism classification","Reporting only; no organism identification","Visualization only; consumes assignments from other tools","Normalization/report preparation only","Wrapper resource use follows Bowtie2 and selected host reference","Functional profiling; DB configuration is a major resource factor","No portable sample benchmark; depends on marker DB and cohort size","Workflow engine rather than an organism classifier","Workflow engine rather than an organism classifier","Reporting only; no organism identification","Reporting only; resource use follows embedded analyses","Typesetting only; no organism identification","MGTK documented long-read assembly option; approximate planning range","MGTK documented option; no portable resource benchmark found","Used as an optional assembly choice in nf-core/viralmetagenome","RefMG.v1 and mOTU.v1 are databases rather than standalone software tools"],[4,4,16,4,8,8,2,1,32,16,150,8,80,8,32,250,16,16,300,64,64,1024,60.5,3.5,null,32,32,32,10,32,null,64,128,128,128,32,128,null,4,16,32,32,32,140,16,32,64,128,64,64,32,32,32,16,32,64,64,null,64,4,32,32,null,32,64,4,4,4,32,64,64,4,4,4,4,4,128,128,128,null],[3,2,2,3,2,1,3,3,2,2,3,3,3,3,3,2,3,2,2,3,1,3,3,3,3,3,3,3,3,3,2,2,1,1,1,2,1,2,3,2,2,2,2,1.5,2,2,2,3,2,2,2,2,1.5,2,2,1.5,1.5,2,1.5,3,2,1.5,2,1.5,3,3,3,3,2,2,1.5,4,4,3,3,3,1,1,1,2],[0,0,null,0,0,0,0,0,0,0,150,null,12,4.6,null,500,10,null,null,300,300,null,783,null,null,4,10,20,10,100,15,0,0,0,0,0,0,0,0,0,0,0,0,950,2,10,300,null,0,0,10,null,null,null,0,300,null,null,300,0,100,null,null,100,45,0,null,0,100,null,10,0,0,0,0,0,0,0,0,null],[10,0.1,10,10,10,10,10,10,10,10,20,null,null,0.1,0.1,null,null,0.1,null,100,100,null,100,null,null,20,100,20,20,100,null,10,10,10,10,null,10,null,10,20,10,10,0.1,null,0.1,null,0.1,100,1,1,0.1,0.1,0.1,1,0.1,100,100,null,20,null,null,0.1,null,20,null,0.1,0.1,0.1,10,10,null,0,0,0.1,0.1,0.1,10,10,100,null]],"container":"<table class=\"compact stripe tool-table\">\n  <thead>\n    <tr>\n      <th>Tool<\/th>\n      <th>Pipeline count<\/th>\n      <th>Purpose<\/th>\n      <th>Pipelines that use it<\/th>\n      <th>Source code / docs<\/th>\n      <th>Citation<\/th>\n      <th>RAM range<\/th>\n      <th>Relative speed<\/th>\n      <th>Database disk<\/th>\n      <th>Sample/result disk<\/th>\n      <th>Estimate notes<\/th>\n      <th>ram_max_gb<\/th>\n      <th>speed_rank<\/th>\n      <th>database_max_gb<\/th>\n      <th>results_max_gb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":100,"lengthMenu":[10,25,50,100],"scrollX":false,"autoWidth":false,"order":[[1,"desc"]],"dom":"<\"tool-table-search\"f>rt<\"tool-table-footer\"lip>","columnDefs":[{"width":"8%","targets":0},{"width":"4%","targets":1},{"width":"14%","targets":2},{"width":"17%","targets":3},{"width":"7%","targets":4},{"width":"6%","targets":5},{"width":"9%","targets":6},{"width":"6%","targets":7},{"width":"9%","targets":8},{"width":"9%","targets":9},{"width":"11%","targets":10},{"orderData":11,"targets":6},{"orderData":12,"targets":7},{"orderData":13,"targets":8},{"orderData":14,"targets":9},{"visible":false,"targets":[11,12,13,14]},{"className":"dt-right","targets":[1,11,12,13,14]},{"name":"Tool","targets":0},{"name":"Pipeline count","targets":1},{"name":"Purpose","targets":2},{"name":"Pipelines that use it","targets":3},{"name":"Source code / docs","targets":4},{"name":"Citation","targets":5},{"name":"RAM range","targets":6},{"name":"Relative speed","targets":7},{"name":"Database disk","targets":8},{"name":"Sample/result disk","targets":9},{"name":"Estimate notes","targets":10},{"name":"ram_max_gb","targets":11},{"name":"speed_rank","targets":12},{"name":"database_max_gb","targets":13},{"name":"results_max_gb","targets":14}],"orderClasses":false,"orderCellsTop":true,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[11]; $(this.api().cell(row, 6).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 4 ? \"#d5eee7\" : value <= 16 ? \"#e7edf4\" : value <= 64 ? \"#f6e8c8\" : \"#e7b7ad\"});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':value == \"High\" ? \"#d5eee7\" : value == \"Medium\" ? \"#e7edf4\" : value == \"Low-Medium\" ? \"#f6e8c8\" : value == \"Low\" ? \"#e7b7ad\" : value == \"N/A\" ? \"#f1f1ef\" : null});\nvar value=data[13]; $(this.api().cell(row, 8).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#f1f1ef\" : value <= 1 ? \"#d5eee7\" : value <= 10 ? \"#e7edf4\" : value <= 100 ? \"#f6e8c8\" : \"#e7b7ad\"});\nvar value=data[14]; $(this.api().cell(row, 9).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#f1f1ef\" : value <= 1 ? \"#d5eee7\" : value <= 10 ? \"#e7edf4\" : value <= 100 ? \"#f6e8c8\" : \"#e7b7ad\"});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+<p>RAM, database, results, and speed values are approximate planning ranges for a typical short-read sample (about 10 million paired 2x150 bp reads) where no directly comparable benchmark exists. Range columns display the source summary and sort by the largest numeric bound parsed in GB; the same bound drives cell shading. Qualitative descriptions use planning maxima (for example, “several GB” maps to 20 GB and “hundreds of GB” to 300 GB); <code>N/R</code> bounds sort as unavailable and remain uncolored. Speed uses an internal rank (Low &lt; Low-Medium &lt; Medium &lt; High; N/A last in ascending order), not alphabetical order. Reference builds, settings, and retained intermediates can change these values substantially. Workflow engines and report generators are included but do not perform organism identification.</p>
+<p>Pipeline count is the number of distinct included workflows mapped to the tool; the table defaults to highest count first.</p>
+<p><a href="data/tools.csv">Download tool metadata</a> · <a href="data/pipeline_tools.csv">Download pipeline/tool mappings</a> · <a href="./pipelines.html">Return to the pipeline catalogue</a></p>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Evidence reviewed through 15 October 2026</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

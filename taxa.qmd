@@ -1,0 +1,72 @@
+---
+page-layout: full
+toc: false
+---
+
+```{r}
+pipelines <- read.csv("data/pipelines.csv", stringsAsFactors = FALSE, check.names = FALSE)
+taxa <- read.csv("data/taxa_matrix.csv", stringsAsFactors = FALSE, check.names = FALSE)
+source("R/taxon_score.R")
+coverage <- merge(
+  taxa,
+  pipelines[, c("pipeline_id", "name")],
+  by = "pipeline_id",
+  all.x = TRUE,
+  sort = FALSE
+)
+coverage <- score_taxa(coverage)
+coverage <- coverage[, c(
+  "name", "intended_scope", "score", "bacteria", "archaea", "viruses", "fungi",
+  "plants", "animals", "protists", "capability_note"
+)]
+names(coverage) <- c(
+  "Pipeline", "Intended scope", "Score", "Bacteria", "Archaea", "Viruses",
+  "Fungi", "Plants", "Animals", "Protists", "Notes"
+)
+```
+
+
+```{r}
+DT::datatable(
+  coverage,
+  elementId = "taxa-catalogue",
+  rownames = FALSE,
+  filter = "top",
+  class = "compact stripe taxa-table",
+  options = list(
+    pageLength = 100,
+    lengthMenu = c(10, 25, 50, 100),
+    scrollX = FALSE,
+    autoWidth = FALSE,
+    order = list(list(2, "desc")),
+    dom = '<"taxa-table-search"f>rt<"taxa-table-footer"lip>',
+    columnDefs = list(
+      list(width = "8%", targets = 0),
+      list(width = "16%", targets = 1),
+      list(width = "6%", targets = 2),
+      list(width = "6%", targets = 3:9),
+      list(width = "28%", targets = 10)
+    )
+  )
+) |>
+  DT::formatStyle(
+    c("Bacteria", "Archaea", "Viruses", "Fungi", "Plants", "Animals", "Protists"),
+    backgroundColor = DT::styleEqual(c("Y", "DB", "~", "—"), c("#d5eee7", "#e7edf4", "#f6e8c8", "#f1f1ef"))
+  ) |>
+  DT::formatStyle(
+    "Score",
+    color = "transparent",
+    background = DT::styleColorBar(c(0, 1), "#8bb7a8", angle = 270),
+    backgroundSize = "100% 12px",
+    backgroundRepeat = "no-repeat",
+    backgroundPosition = "left center"
+  )
+```
+
+The colored score bar is a relative breadth metric, not a quality/performance score; the numeric value is retained for sorting but hidden. Scores range from 0 to 1. For each of seven groups, intended support earns 2 points (`Y`), 1.25 (`~`), or 1 (`DB`); supported but non-intended `Y`, `~`, and `DB` earn 1, 0.5, and 0.25 points respectively. The total is normalized by the maximum of 14. `Y` means supported, `DB` means database-dependent, `~` means partial/optional, and `—` means no documented support.
+
+Scope and notes text is clipped to keep all rows the same height; full text is available in the editable CSV and detailed review.
+
+This matrix intentionally avoids interpreting an arbitrary match in a broad nt/nr reference as validated organism identification. Genome-resolved workflows report taxonomy for recovered contigs or MAGs, while read-profiling workflows report read-level assignments; those outputs should not be treated as interchangeable.
+
+[Download the editable taxon matrix](data/taxa_matrix.csv) · [Review the inclusion boundaries](index.qmd#inclusion-criteria)

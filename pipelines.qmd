@@ -1,0 +1,77 @@
+---
+page-layout: full
+toc: false
+---
+
+```{r}
+pipelines <- read.csv("data/pipelines.csv", stringsAsFactors = FALSE, check.names = FALSE)
+groups <- read.csv("data/strategy_groups.csv", stringsAsFactors = FALSE, check.names = FALSE)
+lookup <- setNames(groups$group_name, groups$group_id)
+pipelines$strategy_group <- unname(lookup[pipelines$workflow_group])
+linkify <- function(url, label) {
+  if (!nzchar(url)) return(htmltools::htmlEscape(label))
+  paste0(
+    '<a href="', htmltools::htmlEscape(url, attribute = TRUE),
+    '" target="_blank" rel="noopener noreferrer">',
+    htmltools::htmlEscape(label), '</a>'
+  )
+}
+pipelines$source <- vapply(pipelines$source_url, linkify, character(1), label = "Repository")
+pipelines$citation_link <- mapply(linkify, pipelines$citation_url, pipelines$citation, USE.NAMES = FALSE)
+```
+
+
+```{r}
+catalog <- pipelines[, c(
+  "name", "year", "license", "developers", "status", "strategy_group",
+  "intended_taxa", "capable_taxa_summary", "identification_strategy", "report_summary",
+  "source", "citation_link", "notes"
+)]
+names(catalog) <- c(
+  "Pipeline", "Year", "License", "Developing group", "Status", "Strategy",
+  "Intended taxa", "Capable taxa", "Core tools & identification approach", "HTML/PDF report",
+  "Source code", "Citation", "Notes"
+)
+DT::datatable(
+  catalog,
+  elementId = "pipeline-catalogue",
+  rownames = FALSE,
+  filter = "top",
+  escape = c(1:10, 13),
+  class = "compact stripe pipeline-table",
+  options = list(
+    pageLength = 100,
+    lengthMenu = c(10, 25, 50, 100),
+    scrollX = FALSE,
+    autoWidth = FALSE,
+    dom = '<"pipeline-table-search"f>rt<"pipeline-table-footer"lip>',
+    columnDefs = list(
+      list(width = "8%", targets = 0),
+      list(width = "4%", targets = 1),
+      list(width = "5%", targets = 2),
+      list(width = "8%", targets = 3),
+      list(width = "8%", targets = 4),
+      list(width = "8%", targets = 5),
+      list(width = "8%", targets = 6),
+      list(width = "8%", targets = 7),
+      list(width = "14%", targets = 8),
+      list(width = "8%", targets = 9),
+      list(width = "5%", targets = 10),
+      list(width = "6%", targets = 11),
+      list(width = "10%", targets = 12)
+    )
+  )
+)
+```
+
+Each citation links to its primary reference; repository links open the source code. Scope and screening boundaries are summarized on the [Overview](index.qmd#inclusion-criteria) page.
+
+## Download the editable data
+
+- [Pipeline catalogue CSV](data/pipelines.csv)
+- [Core tools CSV](data/pipeline_tools.csv)
+- [Taxon coverage matrix CSV](data/taxa_matrix.csv)
+- [Resource evidence CSV](data/resources.csv)
+- [Strategy groups CSV](data/strategy_groups.csv)
+- [Pipeline-to-group mapping CSV](data/pipeline_groups.csv)
+- [Data dictionary](data/README.md)

@@ -1,0 +1,64 @@
+---
+title: "Shotgun Pipeline Atlas"
+subtitle: "Internal comparison of open-source shotgun metagenomic identification workflows"
+page-layout: full
+toc: false
+---
+
+## Inclusion criteria
+
+A pipeline is included when it:
+
+- Accepts untargeted shotgun DNA or RNA reads.
+- Does not require the user to specify a target organism in advance.
+- Covers a broad community or major taxonomic group rather than a narrow lineage.
+- Has publicly available source code under an open-source license.
+- Does not require an account or API key for an external web resource essential to organism identification.
+
+Virus-only pipelines qualify if they screen broadly across viruses. Hosted services and locally runnable code are assessed separately.
+
+## Summary statistics
+
+```{r, results="asis"}
+pipelines <- read.csv("data/pipelines.csv", stringsAsFactors = FALSE, check.names = FALSE)
+tools <- read.csv("data/tools.csv", stringsAsFactors = FALSE, check.names = FALSE)
+cat(sprintf(
+  '<div class="summary-strip"><span><strong>%d</strong> qualifying pipelines</span><span><strong>%d</strong> distinct tools</span></div>',
+  nrow(pipelines), nrow(tools)
+))
+```
+
+## Last modified
+
+Evidence and pipeline status were last reviewed **15 October 2026**. The website is rebuilt from the editable sources whenever `quarto render` is run.
+
+## How to modify the raw data
+
+Edit the CSV files in [`data/`](data/README.md) using a spreadsheet or text editor. `data/README.md` defines each file and the key fields. Keep IDs stable and update relationship tables when adding pipelines, tools, or strategy assignments. Then run `quarto render` to rebuild the site.
+
+## How the website is constructed
+
+This is a static Quarto website built from `.qmd` pages, CSV files, R calculations, and `styles.css`. DT renders searchable tables; Plotly renders the PCA; networkD3 renders the interactive tool network. The site does not require a hosted dashboard service.
+
+## How the raw data is constructed
+
+Pipeline records were assembled through literature-index and public-repository searches, citation chasing, and review of primary papers, official documentation, licenses, and source repositories. The structured CSVs separate pipeline metadata, individual tools, pipeline/tool relationships, taxon coverage, resource evidence, planning estimates, and strategy-group membership. References link to primary sources where available. Resource estimates and relative speeds are explicitly identified as approximations; unavailable measurements remain `N/R` rather than being inferred as facts.
+
+The search was broad but not a guarantee that every unpublished or locally developed workflow was found. `pipeline_review.md` remains in the source folder as the detailed research note; the dashboard data and cited pipeline pages are the maintained website views.
+
+## Near misses and exclusions
+
+These candidates were reviewed but are not part of the 22-pipeline included set under the criteria above.
+
+| Candidate | Decision | Reason |
+|---|---|---|
+| [EQUATOR](https://doi.org/10.3390/microorganisms10040711) | Excluded from strict inventory | Describes a useful Trimmomatic, Kraken2/Bracken, and Kaiju recipe, but no independently licensed public end-to-end pipeline repository was verified. |
+| [Kodoja](https://github.com/abaizan/kodoja) | Borderline; not counted | MIT-licensed and untargeted for plant viruses, but its documented input is plant RNA-seq/sRNA-seq rather than clearly defined shotgun metagenomic libraries. |
+| [Taxonomer](https://github.com/Yandell-Lab/taxonomer_0.5) | Excluded from pipeline count | Legacy classifier/database toolkit rather than a maintained end-to-end workflow; its old web portal is not a current public service. |
+| [VIRify](https://github.com/EBI-Metagenomics/emg-viral-pipeline) | Assembly-input near-miss | Broad viral contig identification, but requires assembled metagenomic/metatranscriptomic sequences rather than raw shotgun reads. |
+| [Sunbeam](https://github.com/sunbeam-labs/sunbeam) | Excluded pending license evidence | Supports untargeted shotgun reads and Kraken extensions, but the current repository has no verifiable recognized open-source license file/metadata. |
+| [SURPI+](https://github.com/chiulab/SURPI-plus-dist) | Excluded | Its license restricts use to research and prohibits patient-care use. Original SURPI is included separately. |
+| [PathSeqPipelineSpark](https://gatk.broadinstitute.org/hc/en-us/articles/360037224472-PathSeqPipelineSpark) | Excluded | Expects BAM/SAM/CRAM rather than raw reads; distinct project-level open-source licensing was not established. |
+| Hosted CZ ID/IDseq portal | Not counted as a public no-account service | Hosted submission/reporting requires an account. The locally runnable workflow is evaluated separately. |
+| [One Codex](https://www.onecodex.com/) and commercial platforms | Excluded | Not open source under the review criteria. |
+| MetaPhlAn, Kraken2, Bracken, Kaiju, Centrifuge, DIAMOND, mOTUs, CAT/GTDB-Tk | Tools, not pipelines | These are profilers/classifiers or genome-taxonomy tools embedded in included workflows; they are listed on the Tools page. |

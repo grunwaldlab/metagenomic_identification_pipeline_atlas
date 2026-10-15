@@ -1,0 +1,338 @@
+:root {
+  --atlas-ink: #17262d;
+  --atlas-muted: #61727a;
+  --atlas-paper: #f8f9f7;
+  --atlas-accent: #376b72;
+  --atlas-teal: #136b68;
+  --atlas-line: rgba(23, 38, 45, 0.14);
+}
+
+body {
+  font-feature-settings: "kern" 1, "liga" 1;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#quarto-content {
+  background: var(--atlas-paper);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.page-columns,
+main.content,
+.content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#quarto-content.page-layout-full {
+  display: block;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+.page-layout-full main.content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1.25rem clamp(0.75rem, 1.5vw, 1.5rem);
+}
+
+.page-layout-full main.content p,
+.page-layout-full main.content li,
+.page-layout-full main.content blockquote {
+  max-width: 112ch;
+}
+
+.page-layout-full main.content h1,
+.page-layout-full main.content h2,
+.page-layout-full main.content h3 {
+  max-width: 112ch;
+}
+
+.page-layout-full main.content table,
+.page-layout-full main.content .cell,
+.page-layout-full main.content .cell-output-display,
+.page-layout-full main.content .html-widget,
+.page-layout-full main.content .dt-container,
+.page-layout-full main.content .dataTables_wrapper,
+.page-layout-full main.content .dataTables_scroll {
+  width: 100%;
+  max-width: 100%;
+}
+
+.panel-tabset,
+.tab-content,
+.tab-pane,
+.html-widget,
+.dt-container {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.navbar {
+  border-bottom: 1px solid var(--atlas-line);
+}
+
+.navbar-brand {
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+
+.summary-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  margin: 1.1rem 0 1.5rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--atlas-line);
+  border-bottom: 1px solid var(--atlas-line);
+  color: var(--atlas-muted);
+  font-size: 0.9rem;
+}
+
+.summary-strip strong {
+  color: var(--atlas-ink);
+}
+
+.strategy-card {
+  position: relative;
+  margin: 0 0 1rem;
+  padding: 0.8rem 0 1rem 3rem;
+  border-bottom: 1px solid var(--atlas-line);
+}
+
+.strategy-index {
+  position: absolute;
+  top: 0.7rem;
+  left: 0;
+  color: var(--atlas-accent);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.strategy-card h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.strategy-card p {
+  max-width: 112ch;
+}
+
+.prose-visual {
+  width: 100%;
+  max-width: 112ch;
+  margin: 0;
+}
+
+.network-threshold-control {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  max-width: 112ch;
+  margin: 0.8rem 0;
+  color: var(--atlas-muted);
+  font-size: 0.9rem;
+}
+
+.network-threshold-control input[type="range"] {
+  width: min(24rem, 45vw);
+  accent-color: var(--atlas-teal);
+}
+
+.network-threshold-control output {
+  min-width: 5rem;
+  color: var(--atlas-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.forceNetwork text.nodetext {
+  fill: var(--atlas-ink) !important;
+  opacity: 1 !important;
+  font-size: 14px !important;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: var(--atlas-paper);
+  stroke-linejoin: round;
+  stroke-width: 3px;
+}
+
+.strategy-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+
+.pipeline-chip {
+  color: var(--atlas-muted);
+  font-size: 0.8rem;
+}
+
+.pipeline-chip:not(:last-child)::after {
+  content: " ·";
+}
+
+.tab-content {
+  padding-top: 1rem;
+}
+
+.dt-container {
+  margin: 0.75rem 0 1.5rem;
+  overflow-x: auto;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+  border: 1px solid var(--atlas-line);
+  border-radius: 0.4rem;
+  padding: 0.3rem 0.5rem;
+}
+
+.dataTables_wrapper .dataTable {
+  font-size: 0.88rem;
+}
+
+.dataTables_wrapper table.pipeline-table,
+.dataTables_wrapper table.tool-table,
+.dataTables_wrapper table.resource-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+}
+
+.dataTables_wrapper table.pipeline-table th,
+.dataTables_wrapper table.pipeline-table td,
+.dataTables_wrapper table.tool-table th,
+.dataTables_wrapper table.tool-table td,
+.dataTables_wrapper table.resource-table th,
+.dataTables_wrapper table.resource-table td {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
+.dataTables_wrapper table.taxa-table tbody tr {
+  height: 44px;
+}
+
+.dataTables_wrapper table.taxa-table tbody td {
+  box-sizing: border-box;
+  height: 44px;
+  max-height: 44px;
+  overflow: hidden;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap !important;
+}
+
+.dataTables_wrapper table.resource-table tbody tr {
+  height: 44px;
+}
+
+.dataTables_wrapper table.resource-table tbody td {
+  box-sizing: border-box;
+  height: 44px;
+  max-height: 44px;
+  overflow: hidden;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap !important;
+}
+
+.pipeline-table-search {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.pipeline-table-search .dataTables_filter {
+  float: none;
+  text-align: left;
+}
+
+.pipeline-table-search label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pipeline-table-search input {
+  margin-left: 0;
+}
+
+.tool-table-search {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.tool-table-search .dataTables_filter {
+  float: none;
+  text-align: left;
+}
+
+.tool-table-search label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tool-table-search input {
+  margin-left: 0;
+}
+
+.resource-table-search {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.resource-table-search .dataTables_filter {
+  float: none;
+  text-align: left;
+}
+
+.resource-table-search label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.resource-table-search input {
+  margin-left: 0;
+}
+
+.dataTables_wrapper .dataTable thead th {
+  color: var(--atlas-ink);
+  vertical-align: bottom;
+}
+
+.callout-note {
+  border-left-color: var(--atlas-accent) !important;
+}
+
+@media (max-width: 520px) {
+  .page-layout-full main.content {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  .quarto-title,
+  .quarto-title-block {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .strategy-card {
+    padding-left: 2rem;
+  }
+}

@@ -1,0 +1,52 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+
+website:
+  title: "Shotgun Pipeline Atlas"
+  description: "An evidence-linked comparison of open-source shotgun metagenomic organism-identification workflows."
+  site-url: ""
+  navbar:
+    left:
+      - text: "Overview"
+        href: index.qmd
+      - text: "Pipelines"
+        href: pipelines.qmd
+      - text: "Tools"
+        href: tools.qmd
+      - text: "Taxa"
+        href: taxa.qmd
+      - text: "Resources"
+        href: resources.qmd
+      - text: "Strategies"
+        href: strategies.qmd
+  page-footer:
+    left: "Evidence reviewed through 15 October 2026"
+    right: "Built with Quarto"
+  search: true
+  page-navigation: true
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-location: right
+    code-fold: true
+    anchor-sections: true
+    link-external-newwindow: true
+    smooth-scroll: true
+    df-print: paged
+
+execute:
+  echo: false
+  warning: false
+  message: false
+  freeze: false
+
+knitr:
+  opts_chunk:
+    comment: ""
+    fig-align: "center"
